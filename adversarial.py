@@ -1,11 +1,6 @@
 import pandas as pd 
 
 from sklearn.model_selection import StratifiedKFold
-
-import sys
-sys.path.append('./')
-
-import numpy as np
 from utilsMsc.MyModels import ModelsImputation
 from utilsMsc.MyUtils import MyPipeline
 from utilsMsc.MyPreprocessing import PreprocessingDatasets
@@ -46,8 +41,10 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict, 
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv = AdversarialML.attack_datasets(X=X_teste,
-                                                          y=y_teste,
+                    X_adv = AdversarialML.attack_datasets(X_train=X_treino,
+                                                          y_train=y_treino,
+                                                          X_test=X_teste,
+                                                          y_test=y_teste,
                                                           noise_level=30,
                                                           attack_type=set_attack)
 

@@ -441,36 +441,25 @@ class AdversarialML:
         return dup
     
     # ------------------------------------------------------------------------
-    def get_data(X_raw:pd.DataFrame, y_raw:np.array, test_size:float):  
-        X = X_raw.values.copy()
+    def get_data(y_raw:np.ndarray):  
         y = np.copy(y_raw)
-        # X = X_raw[y_raw != 0, :]
-        # y = y_raw[y_raw != 0]
         labels = np.zeros((y.shape[0], 2))
         labels[y == 0] = np.array([1, 0])
         labels[y == 1] = np.array([0, 1])
         y = labels
-        
-        n_sample = len(X)
-        train_size = 1 - test_size
-        
-        order = np.random.permutation(n_sample)
-        X = X[order]
-        y = y[order].astype(np.float32)
-        
-        X_train = X[:int(train_size * n_sample)]
-        y_train = y[:int(train_size * n_sample)]
 
-        X_test = X[int(train_size * n_sample):]
-        y_test = y[int(train_size * n_sample):]
-
-        return X_train, y_train, X_test, y_test
+        return y
     
     # ------------------------------------------------------------------------
     @staticmethod
-    def attack_datasets(X:pd.DataFrame,y:np.array, noise_level:int, attack_type:str):
+    def attack_datasets(X_train:pd.DataFrame,
+                        y_train:np.ndarray, 
+                        X_test:pd.DataFrame,
+                        y_test:np.ndarray,
+                        noise_level:int, 
+                        attack_type:str):
         """
-        Generate adversarial examples using the Fast Gradient Method (FGM) on a given dataset.
+        Generate adversarial examples on a given dataset.
 
         Args:
             X (pd.DataFrame): The original dataset.
@@ -481,15 +470,15 @@ class AdversarialML:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
         nr = noise_level / 100
-        N = X.shape[0]*nr
-        pos_noise = np.random.choice(X.index, round(N), replace=False)
+        N = X_test.shape[0]*nr
+        pos_noise = np.random.choice(X_test.index, round(N), replace=False)
         
-        x_selected_adv = X.astype("float64").iloc[pos_noise,:].values
-        min_value = min(X.astype("float64").min())
-        max_value = max(X.astype("float64").max())
+        x_selected_adv = X_test.astype("float64").iloc[pos_noise,:].values
+        min_value = min(X_test.astype("float64").min())
+        max_value = max(X_test.astype("float64").max())
         # Create and fit the Scikit-learn model
         model = SVC(C=1.0, kernel="rbf", probability=True)
-        model.fit(X=X, y=y)
+        model.fit(X=X_train, y=y_train)
 
         # Create ART classifier for scikit-learn SVC
         art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
@@ -501,26 +490,20 @@ class AdversarialML:
                 x_adv = attack.generate(x=x_selected_adv)
 
             case "poison":
-                attack_idx = 0
-                X_train, y_train, X_test, y_test = AdversarialML.get_data(X_raw=X,
-                                                                          y_raw=y,
-                                                                          test_size=0.25)
-                init_attack = np.copy(X_train[attack_idx])
-                y_attack = np.array([1,1]) - np.copy(y_train[attack_idx])
+                y_train_formated = AdversarialML.get_data(y_train)
+                y_test_formated = AdversarialML.get_data(y_test)
                 attack = PoisoningAttackSVM(classifier=art_classifier, 
                                             step=0.001, 
                                             eps = 1.0, 
                                             x_train= X_train, 
-                                            y_train= y_train, 
-                                            x_val= X_test, 
-                                            y_val= y_test, 
+                                            y_train= y_train_formated, 
+                                            x_val= x_selected_adv, 
+                                            y_val= y_test_formated[pos_noise], 
                                             max_iter=10)
-                X_train_poisoned, _ = attack.poison(np.array([init_attack], dtype=np.float64), 
-                                                    y=np.array([y_attack], dtype=np.float64))
+                x_adv, _ = attack.poison(x_selected_adv, y_test_formated[pos_noise])
+                
 
-                x_adv = np.concatenate((X_train_poisoned,X_test))
-
-        X_ = X.drop(pos_noise, axis=0)
-        X_result = pd.concat([pd.DataFrame(x_adv, columns=X.columns),X_]).reset_index(drop=True)
+        X_ = X_test.drop(pos_noise, axis=0)
+        X_result = pd.concat([pd.DataFrame(x_adv, columns=X_test.columns),X_]).reset_index(drop=True)
 
         return X_result
