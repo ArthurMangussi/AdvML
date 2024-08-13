@@ -26,7 +26,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict, 
             binary_features = MyPipeline.get_binary_features(data=df)
             for md in tabela_resultados['missing_rate']:
                 file.write(f'Dataset = {nome} com MD = {md}\n')
-                _logger.info(f'Dataset = {nome} com MD = {md}\n')
+                _logger.info(f'Dataset = {nome} com MD = {md} no {model_impt}\n')
 
                 fold = 0
                 cv = StratifiedKFold()
@@ -153,20 +153,21 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict, 
 
 if __name__ == "__main__":
 
-    diretorio = "C:\\Users\\Mult-e\\Desktop\\@Codigos\\MestradoCodigos\\MestradoCodigos\\Adversarial ML\\DatasetsADVS"
+    diretorio = "./DatasetsADVS"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
 
     mecanismo = "MNAR-determisticFalse"
+    attack_str = "poison"
 
     # Cria diretórios para salvar os resultados do experimento
-    os.makedirs(f"./Adversarial ML/Tempos/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Adversarial ML/Datasets/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Adversarial ML/Resultados/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./{attack_str.upper()}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./{attack_str.upper()}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./{attack_str.upper()}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
 
-    pipeline_adversarial("mean",mecanismo,tabela_resultados, "poison")
+    pipeline_adversarial("mean",mecanismo,tabela_resultados, )
 
     # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 

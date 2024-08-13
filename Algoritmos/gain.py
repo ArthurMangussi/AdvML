@@ -38,7 +38,7 @@ class Gain:
   """
   Impute missing values using Generative Adversarial Imputation Nets (GAIN)
   """
-  def __init__(self, batch_size:int = 64, hint_rate:float = 0.9, alpha:int = 200, iterations:int = 10000):
+  def __init__(self, batch_size:int = 64, hint_rate:float = 0.9, alpha:int = 100, iterations:int = 10000):
     self.batch_size = batch_size
     self.hint_rate = hint_rate
     self.alpha = alpha

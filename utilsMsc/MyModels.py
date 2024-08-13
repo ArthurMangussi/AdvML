@@ -18,6 +18,7 @@ from sklearn.impute import IterativeImputer, KNNImputer, SimpleImputer
 from Algoritmos.customknn import CustomKNNImputer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import BayesianRidge
+from sklearn.compose import ColumnTransformer
 
 # Partial Multiple Imputation with Variational Autoencoders
 from Algoritmos.pmivae import PMIVAE
@@ -188,10 +189,22 @@ class ModelsImputation:
 
     # ------------------------------------------------------------------------
     @staticmethod
-    def model_dumb(dataset_train:pd.DataFrame):
-        imputer = SimpleImputer(strategy="mean")
-        dumb = imputer.fit(dataset_train.iloc[:, :].values)
+    def model_dumb(dataset_train:pd.DataFrame, 
+                   binary_vals:list[str]):
+        
+        numeric_imputer = SimpleImputer(strategy='mean')
+        categorical_imputer = SimpleImputer(strategy='most_frequent')
+        
+        num_vals = [col for col in dataset_train.columns if col not in binary_vals]
+        binary_vals.remove("target")
+            
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ('num', numeric_imputer, num_vals),
+                ('cat', categorical_imputer, binary_vals)
+            ])
 
+        dumb = preprocessor.fit(dataset_train)
         return dumb
     
     # ------------------------------------------------------------------------
@@ -284,7 +297,8 @@ class ModelsImputation:
 
             case "mean":
                 self._logger.info("[MEAN] Training...")
-                return ModelsImputation.model_dumb(x_train)
+                return ModelsImputation.model_dumb(x_train, 
+                                                   kwargs["binary_val"])
             
             case "softImpute":
                 self._logger.info("[SoftImpute] Training...")

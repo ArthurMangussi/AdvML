@@ -1,9 +1,6 @@
 import pandas as pd 
+
 from sklearn.model_selection import StratifiedKFold
-
-import sys
-sys.path.append('./')
-
 from utilsMsc.MyModels import ModelsImputation
 from utilsMsc.MyUtils import MyPipeline
 from utilsMsc.MyPreprocessing import PreprocessingDatasets
@@ -18,20 +15,23 @@ from mdatagen.multivariate.mMNAR import mMNAR
 from time import perf_counter
 import os 
 
-
 def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
     _logger = MeLogger()
+
+    # Cria diretórios para salvar os resultados do experimento
+    os.makedirs(f"./Baseline/{model_impt}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Baseline/{model_impt}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Baseline/{model_impt}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
     
-    with open(f'./Adversarial ML/Tempos/{mecanismo}_MultivariadoBaseline/tempo_{model_impt}.txt','w') as file:
-        # Gerando resultados para os mecanismo
+    with open(f'./Baseline/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
             X = df.drop(columns='target')
             y = df['target'].values
-                       
+            binary_features = MyPipeline.get_binary_features(data=df)
             for md in tabela_resultados['missing_rate']:
                 file.write(f'Dataset = {nome} com MD = {md}\n')
-                _logger.info(f'Dataset = {nome} com MD = {md}\n')
+                _logger.info(f'Dataset = {nome} com MD = {md} no {model_impt}\n')
 
                 fold = 0
                 cv = StratifiedKFold()
@@ -59,18 +59,18 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                                             y=y_treino, 
                                             )
                     X_treino_norm_md = impt_md_train.random(
-                        missing_rate=md, deterministic=False
+                        missing_rate=md, deterministic=True
                     )
                     X_treino_norm_md = X_treino_norm_md.drop(columns='target')
 
                     impt_md_test = mMNAR(X=X_teste_norm, 
-                                        y=y_teste,
+                                         y=y_teste,
                                         )
                     X_teste_norm_md = impt_md_test.random(
-                        missing_rate=md, deterministic=False
+                        missing_rate=md, deterministic=True
                     )
                     X_teste_norm_md = X_teste_norm_md.drop(columns='target')
-
+                    
                     inicio_imputation = perf_counter()
                     # Inicializando e treinando o modelo
                     model_selected = ModelsImputation()
@@ -90,10 +90,9 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                         model = model_selected.choose_model(
                             model=model_impt,
                             x_train=X_treino_norm_md,
-                            y_train=y_treino, # PMIVAE
-                            x_val = X_teste_norm_md, # PMIVAE
-                            y_val = y_teste, # PMIVAE
-                            
+                            x_test = X_teste_norm_md,
+                            x_test_complete = X_teste_norm,
+                            binary_val = binary_features                         
                         )
 
                     fim_imputation = perf_counter()
@@ -103,12 +102,22 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
 
                     # Imputação dos missing values nos conjuntos de treino e teste
                     try:
-                        output_md_test = model.transform(
-                            X_teste_norm_md.iloc[:, :].values
-                        )
+                        if model_impt == "mean":
+                            output_md_test = model.transform(
+                                X_teste_norm_md
+                            )                        
+                        else:
+                            output_md_test = model.transform(
+                                X_teste_norm_md.iloc[:, :].values
+                            )
                     except AttributeError:                        
                         fatores_latentes_test = model.fit(X_teste_norm_md.iloc[:, :].values)
                         output_md_test = model.predict(X_teste_norm_md.iloc[:, :].values)
+
+                    # Encode das variávies binárias
+                    df_output_md_teste = pd.DataFrame(output_md_test, columns=X.columns)
+                    output_md_test = MyPipeline.encode_features_categoricas(list_binary_features=binary_features,
+                                                                            imputed_dataset=df_output_md_teste)
 
                     # Calculando MAE para a imputação no conjunto de teste
                     (
@@ -128,7 +137,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                     data_imputed = pd.DataFrame(output_md_test.copy(), columns=X.columns)
                     data_imputed['target'] = y_teste
 
-                    data_imputed.to_csv(f"./Adversarial ML/Datasets/{mecanismo}_MultivariadoBaseline/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
+                    data_imputed.to_csv(f"./Baseline/{model_impt}/Datasets/{mecanismo}_Multivariado/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
                     fold += 1
                     
         resultados_final = AnalysisResults.extrai_resultados(tabela_resultados)
@@ -140,28 +149,21 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
             )
         )
         resultados_mecanismo.to_csv(
-            f'./Adversarial ML/Resultados/{mecanismo}_MultivariadoBaseline/{model_impt}_{mecanismo}.csv',
+            f'./Baseline/{model_impt}/Resultados/{mecanismo}_Multivariado/{model_impt}_{mecanismo}.csv',
             
         )        
     return _logger.info(f"Imputation_{model_impt}_done!")
 
 if __name__ == "__main__":
 
-    diretorio = "C:\\Users\\Mult-e\\Desktop\\@Codigos\\MestradoCodigos\\MestradoCodigos\\Adversarial ML\\DatasetsADVS"
+    diretorio = "./DatasetsADVS"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
 
     mecanismo = "MNAR-determisticFalse"
-
-    # Cria diretórios para salvar os resultados do experimento
-    os.makedirs(f"./Adversarial ML/Tempos/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Adversarial ML/Datasets/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Adversarial ML/Resultados/{mecanismo}_Multivariado", exist_ok=True)
-
-    pipeline_adversarial("mean",mecanismo,tabela_resultados)
-
+    pipeline_adversarial("mean", mecanismo, tabela_resultados)
     # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
     #     args_list = [("mean",mecanismo,tabela_resultados),
@@ -170,7 +172,8 @@ if __name__ == "__main__":
     #                  ("pmivae",mecanismo,tabela_resultados),
     #                  ("saei",mecanismo,tabela_resultados),
     #                  ("softImpute",mecanismo,tabela_resultados),
-    #                  ("gain",mecanismo,tabela_resultados)
+    #                  ("gain",mecanismo,tabela_resultados),
+    #                  ("missForest", mecanismo, tabela_resultados)
     #                  ]
         
     #     pool.starmap(pipeline_adversarial,args_list)
