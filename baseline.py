@@ -162,19 +162,18 @@ if __name__ == "__main__":
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
 
-    mecanismo = "MNAR-determisticFalse"
-    pipeline_adversarial("mean", mecanismo, tabela_resultados)
-    # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+    mecanismo = "MNAR-determisticTrue"
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
-    #     args_list = [("mean",mecanismo,tabela_resultados),
-    #                  ("knn",mecanismo,tabela_resultados),
-    #                  ("mice",mecanismo,tabela_resultados),
-    #                  ("pmivae",mecanismo,tabela_resultados),
-    #                  ("saei",mecanismo,tabela_resultados),
-    #                  ("softImpute",mecanismo,tabela_resultados),
-    #                  ("gain",mecanismo,tabela_resultados),
-    #                  ("missForest", mecanismo, tabela_resultados)
-    #                  ]
+        args_list = [("mean",mecanismo,tabela_resultados),
+                     ("knn",mecanismo,tabela_resultados),
+                     ("mice",mecanismo,tabela_resultados),
+                     ("pmivae",mecanismo,tabela_resultados),
+                     ("saei",mecanismo,tabela_resultados),
+                     ("softImpute",mecanismo,tabela_resultados),
+                     ("gain",mecanismo,tabela_resultados),
+                     ("missForest", mecanismo, tabela_resultados)
+                     ]
         
-    #     pool.starmap(pipeline_adversarial,args_list)
+        pool.starmap(pipeline_adversarial,args_list)
 

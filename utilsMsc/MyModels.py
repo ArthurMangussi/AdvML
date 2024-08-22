@@ -196,12 +196,16 @@ class ModelsImputation:
         categorical_imputer = SimpleImputer(strategy='most_frequent')
         
         num_vals = [col for col in dataset_train.columns if col not in binary_vals]
-        binary_vals.remove("target")
+        try:
+            copy_binary_vals = binary_vals.copy()
+            copy_binary_vals.remove("target")
+        except ValueError:
+            print(binary_vals)
             
         preprocessor = ColumnTransformer(
             transformers=[
                 ('num', numeric_imputer, num_vals),
-                ('cat', categorical_imputer, binary_vals)
+                ('cat', categorical_imputer, copy_binary_vals)
             ])
 
         dumb = preprocessor.fit(dataset_train)

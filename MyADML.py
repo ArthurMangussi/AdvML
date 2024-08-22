@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
 
 from art.estimators.classification import SklearnClassifier
 from art.attacks.evasion import FastGradientMethod
@@ -452,12 +452,59 @@ class AdversarialML:
     
     # ------------------------------------------------------------------------
     @staticmethod
-    def attack_datasets(X_train:pd.DataFrame,
+    def attack_evasion(X_train:pd.DataFrame,
                         y_train:np.ndarray, 
                         X_test:pd.DataFrame,
-                        y_test:np.ndarray,
-                        noise_level:int, 
-                        attack_type:str):
+                        y_test:np.ndarray):
+        
+        """
+        Generate adversarial attack using Fast Sign Grandient Method (FGSM)
+
+        Args:
+
+        Returns:
+
+        """
+        
+        x_selected_adv = X_test.astype("float64").values
+        min_value = min(X_test.astype("float64").min())
+        max_value = max(X_test.astype("float64").max())
+
+        # Create and fit the Scikit-learn model
+        model = SVC(C=1.0, kernel="rbf", probability=True)
+        model.fit(X=X_train, y=y_train)
+
+        # Create ART classifier for scikit-learn SVC
+        art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
+
+        attack = FastGradientMethod(estimator=art_classifier, 
+                                    eps=0.3,
+                                    norm=np.inf)
+        x_adv = attack.generate(x=x_selected_adv)
+
+        #Aqui eu coloco as métricas de classificação?
+        ## Se sim, métricas no X_test benigno
+        y_benign = art_classifier.predict(X_test)
+        print("Caso Benigno")
+        accuracy_b = np.sum(np.argmax(y_benign, axis=1) == y_test) / len(y_test)
+        print(f"Acurácia: {accuracy_b}")
+        
+
+        ## métricas no X_test maligno
+        y_malign = art_classifier.predict(x_adv)
+        print("Caso Maligno")
+        accuracy_m = np.sum(np.argmax(y_malign, axis=1) == y_test) / len(y_test)
+        print(f"Acurácia: {accuracy_m}")
+        
+
+        return pd.DataFrame(x_adv, columns=X_test.columns)
+
+    # ------------------------------------------------------------------------
+    @staticmethod
+    def attack_poison(X_train:pd.DataFrame,
+                        y_train:np.ndarray, 
+                        X_test:pd.DataFrame,
+                        y_test:np.ndarray):
         """
         Generate adversarial examples on a given dataset.
 
@@ -469,13 +516,11 @@ class AdversarialML:
         Returns:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
-        nr = noise_level / 100
-        N = X_test.shape[0]*nr
-        pos_noise = np.random.choice(X_test.index, round(N), replace=False)
         
-        x_selected_adv = X_test.astype("float64").iloc[pos_noise,:].values
-        min_value = min(X_test.astype("float64").min())
-        max_value = max(X_test.astype("float64").max())
+        x_selected_adv = X_train.astype("float64").values
+        min_value = min(X_train.astype("float64").min())
+        max_value = max(X_train.astype("float64").max())
+        
         # Create and fit the Scikit-learn model
         model = SVC(C=1.0, kernel="rbf", probability=True)
         model.fit(X=X_train, y=y_train)
@@ -483,27 +528,17 @@ class AdversarialML:
         # Create ART classifier for scikit-learn SVC
         art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
 
-        # Generate adversarial test examples
-        match attack_type:
-            case "evasion":            
-                attack = FastGradientMethod(estimator=art_classifier, eps=0.2)
-                x_adv = attack.generate(x=x_selected_adv)
+        y_train_formated = AdversarialML.get_data(y_train)
+        y_test_formated = AdversarialML.get_data(y_test)
+        attack = PoisoningAttackSVM(classifier=art_classifier, 
+                                    step=0.001, 
+                                    eps = 1.0, 
+                                    x_train= X_train, 
+                                    y_train= y_train_formated, 
+                                    x_val= x_selected_adv, 
+                                    y_val= y_test_formated, 
+                                    max_iter=10)
+        x_adv, _ = attack.poison(x_selected_adv, y_test_formated)
+    
 
-            case "poison":
-                y_train_formated = AdversarialML.get_data(y_train)
-                y_test_formated = AdversarialML.get_data(y_test)
-                attack = PoisoningAttackSVM(classifier=art_classifier, 
-                                            step=0.001, 
-                                            eps = 1.0, 
-                                            x_train= X_train, 
-                                            y_train= y_train_formated, 
-                                            x_val= x_selected_adv, 
-                                            y_val= y_test_formated[pos_noise], 
-                                            max_iter=10)
-                x_adv, _ = attack.poison(x_selected_adv, y_test_formated[pos_noise])
-                
-
-        X_ = X_test.drop(pos_noise, axis=0)
-        X_result = pd.concat([pd.DataFrame(x_adv, columns=X_test.columns),X_]).reset_index(drop=True)
-
-        return X_result
+        return x_adv
