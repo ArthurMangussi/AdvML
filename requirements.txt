@@ -6,3 +6,4 @@ numpy==1.26.4
 tqdm==4.66.1
 scipy==1.11.4
 adversarial-robustness-toolbox==1.18.0
+xgb==2.0.3

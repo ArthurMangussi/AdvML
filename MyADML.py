@@ -421,7 +421,7 @@ class AdversarialML:
                                               "wiscosin"
                                               ]
             
-        tabela_resultados["missing_rate"] = [10,20,40,60]
+        tabela_resultados["missing_rate"] = [5,20,40]
 
         return tabela_resultados
     
@@ -465,10 +465,10 @@ class AdversarialML:
         Returns:
 
         """
-        
-        x_selected_adv = X_test.astype("float64").values
-        min_value = min(X_test.astype("float64").min())
-        max_value = max(X_test.astype("float64").max())
+        X_test_float = X_test.astype("float64")
+        x_selected_adv = X_test_float.values
+        min_value = min(X_test_float.min())
+        max_value = max(X_test_float.max())
 
         # Create and fit the Scikit-learn model
         model = SVC(C=1.0, kernel="rbf", probability=True)
@@ -484,17 +484,17 @@ class AdversarialML:
 
         #Aqui eu coloco as métricas de classificação?
         ## Se sim, métricas no X_test benigno
-        y_benign = art_classifier.predict(X_test)
-        print("Caso Benigno")
-        accuracy_b = np.sum(np.argmax(y_benign, axis=1) == y_test) / len(y_test)
-        print(f"Acurácia: {accuracy_b}")
+        # y_benign = art_classifier.predict(X_test_float)
+        # print("Caso Benigno")
+        # accuracy_b = np.sum(np.argmax(y_benign, axis=1) == y_test) / len(y_test)
+        # print(f"Acurácia: {accuracy_b}")
         
 
-        ## métricas no X_test maligno
-        y_malign = art_classifier.predict(x_adv)
-        print("Caso Maligno")
-        accuracy_m = np.sum(np.argmax(y_malign, axis=1) == y_test) / len(y_test)
-        print(f"Acurácia: {accuracy_m}")
+        # ## métricas no X_test maligno
+        # y_malign = art_classifier.predict(x_adv)
+        # print("Caso Maligno")
+        # accuracy_m = np.sum(np.argmax(y_malign, axis=1) == y_test) / len(y_test)
+        # print(f"Acurácia: {accuracy_m}")
         
 
         return pd.DataFrame(x_adv, columns=X_test.columns)
@@ -502,9 +502,9 @@ class AdversarialML:
     # ------------------------------------------------------------------------
     @staticmethod
     def attack_poison(X_train:pd.DataFrame,
-                        y_train:np.ndarray, 
-                        X_test:pd.DataFrame,
-                        y_test:np.ndarray):
+                      y_train:np.ndarray,
+                      X_test:pd.DataFrame,
+                      y_test:np.ndarray):
         """
         Generate adversarial examples on a given dataset.
 
@@ -517,9 +517,9 @@ class AdversarialML:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
         
-        x_selected_adv = X_train.astype("float64").values
-        min_value = min(X_train.astype("float64").min())
-        max_value = max(X_train.astype("float64").max())
+        X_train_float = X_train.astype("float64").values
+        min_value = min(X_train_float.min())
+        max_value = max(X_train_float.max())
         
         # Create and fit the Scikit-learn model
         model = SVC(C=1.0, kernel="rbf", probability=True)
@@ -533,12 +533,12 @@ class AdversarialML:
         attack = PoisoningAttackSVM(classifier=art_classifier, 
                                     step=0.001, 
                                     eps = 1.0, 
-                                    x_train= X_train, 
+                                    x_train= X_train_float, 
                                     y_train= y_train_formated, 
-                                    x_val= x_selected_adv, 
+                                    x_val= X_test.astype("float64"), 
                                     y_val= y_test_formated, 
                                     max_iter=10)
-        x_adv, _ = attack.poison(x_selected_adv, y_test_formated)
+        x_adv, _ = attack.poison(X_train_float, y_test_formated)
     
 
-        return x_adv
+        return pd.DataFrame(x_adv, columns=X_train.columns)

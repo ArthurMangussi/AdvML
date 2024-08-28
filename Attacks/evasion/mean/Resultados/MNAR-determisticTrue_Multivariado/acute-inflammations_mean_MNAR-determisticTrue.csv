@@ -1,5 +1,0 @@
-,Model,Dataset,Missing Rate,MAE_mean,MAE_std
-0,mean,acute-inflammations,10,0.502,0.056
-1,mean,acute-inflammations,20,0.649,0.034
-2,mean,acute-inflammations,40,0.618,0.03
-3,mean,acute-inflammations,60,0.669,0.094
