@@ -47,10 +47,20 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
 
                 y_pred = model.predict(X_teste_norm)
 
-                f1 = f1_score(y_true=y_teste, y_pred=y_pred)
-                acc = accuracy_score(y_true=y_teste, y_pred=y_pred)
-                rec = recall_score(y_true=y_teste, y_pred=y_pred)
-                auc = roc_auc_score(y_true=y_teste, y_score=model.predict_proba(X_teste_norm)[:,1])
+                if len(np.unique(y)) == 2:
+                    _logger.info(f"Dataset {nome} is binary -> {np.unique(y)}")
+                    f1 = f1_score(y_true=y_teste, y_pred=y_pred)
+                    acc = accuracy_score(y_true=y_teste, y_pred=y_pred)
+                    rec = recall_score(y_true=y_teste, y_pred=y_pred)
+                    auc = roc_auc_score(y_true=y_teste, y_score=model.predict_proba(X_teste_norm)[:,1])
+                else:
+                    _logger.info(f"Dataset {nome} is Multiclass with {len(np.unique(y))} classes -> {np.unique(y)}")
+                    f1 = f1_score(y_true=y_teste, y_pred=y_pred, average="micro")
+                    acc = accuracy_score(y_true=y_teste, y_pred=y_pred)
+                    rec = recall_score(y_true=y_teste, y_pred=y_pred, average="micro")
+                    auc = roc_auc_score(y_true=y_teste, 
+                                        y_score=model.predict_proba(X_teste_norm),
+                                        multi_class="ovr")
 
                 classification_metrics["F1-score"].append({f"{nome}_fold{fold}":round(f1,3)})
                 classification_metrics["Accuracy"].append({f"{nome}_fold{fold}":round(acc,3)})
@@ -59,7 +69,7 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
                 fold += 1
                 
         resultados = pd.DataFrame([classification_metrics])
-        resultados.to_csv("./Resultados/classification_performance_baseline_datasets.csv")
+        resultados.to_csv("./Baseline/classification_performance_baseline_datasets.csv")
         _logger.info("Resultados Baseline Classificação salvos com sucesso!")
     
     except Exception as erro:

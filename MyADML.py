@@ -108,7 +108,7 @@ class AdversarialML:
     def pre_processing_indianLiver(self):
         indian_liver_df = self.datasets["indian_liver"].copy()
         indian_liver_df = indian_liver_df.dropna()
-        indian_liver_df = self._prep.label_encoder(indian_liver_df, ["Gender"])
+        indian_liver_df = self._prep.label_encoder(indian_liver_df, ["Gender", "target"])
         return indian_liver_df
     
     # ------------------------------------------------------------------------
@@ -361,7 +361,7 @@ class AdversarialML:
                                          self.autism_teen,
                                          self.autism_adult,
                                          self.autism_child,
-                                         self.bank,
+                                         #self.bank,
                                          self.bc_coimbra,
                                          self.blood_transfusion,
                                          self.contraceptive,
@@ -393,7 +393,7 @@ class AdversarialML:
                                               "autism-adolescent",
                                               "autism-adult",
                                               "autism-child",
-                                              "bank-marketing",
+                                              #"bank-marketing",
                                               "bc-coimbra",
                                               "blood-transfusion",
                                               "contraceptive-methods",
@@ -517,7 +517,7 @@ class AdversarialML:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
         
-        X_train_float = X_train.astype("float64").values
+        X_train_float = X_train.astype("float64")
         min_value = min(X_train_float.min())
         max_value = max(X_train_float.max())
         
@@ -531,14 +531,15 @@ class AdversarialML:
         y_train_formated = AdversarialML.get_data(y_train)
         y_test_formated = AdversarialML.get_data(y_test)
         attack = PoisoningAttackSVM(classifier=art_classifier, 
-                                    step=0.001, 
-                                    eps = 1.0, 
+                                    step=0.2, 
+                                    eps = 0.3, 
                                     x_train= X_train_float, 
                                     y_train= y_train_formated, 
-                                    x_val= X_test.astype("float64"), 
+                                    x_val= X_test.astype("float64").values, 
                                     y_val= y_test_formated, 
-                                    max_iter=10)
-        x_adv, _ = attack.poison(X_train_float, y_test_formated)
+                                    max_iter=5)
+        x_adv, _ = attack.poison(X_train_float.values, y_train_formated)
     
 
         return pd.DataFrame(x_adv, columns=X_train.columns)
+

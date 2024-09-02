@@ -174,10 +174,10 @@ if __name__ == "__main__":
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
         args_list = [
-                     ("knn",mecanismo,tabela_resultados),
-                     ("mice",mecanismo,tabela_resultados),
-                     ("softImpute",mecanismo,tabela_resultados),
-                     ("gain",mecanismo,tabela_resultados)
+                     #("knn",mecanismo,tabela_resultados,attack_str),
+                     #("mice",mecanismo,tabela_resultados,attack_str),
+                     #("softImpute",mecanismo,tabela_resultados,attack_str),
+                     ("gain",mecanismo,tabela_resultados,attack_str)
                      ]
         
         pool.starmap(pipeline_adversarial,args_list)

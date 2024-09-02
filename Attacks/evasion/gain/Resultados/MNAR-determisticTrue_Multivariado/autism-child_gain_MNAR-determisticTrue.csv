@@ -1,0 +1,13 @@
+,Model,Dataset,Missing Rate,MAE_mean,MAE_std
+0,gain,acute-inflammations,5,0.513,0.234
+1,gain,acute-inflammations,20,0.616,0.114
+2,gain,acute-inflammations,40,0.609,0.078
+3,gain,autism-adolescent,5,0.602,0.151
+4,gain,autism-adolescent,20,0.687,0.027
+5,gain,autism-adolescent,40,0.61,0.046
+6,gain,autism-adult,5,0.383,0.089
+7,gain,autism-adult,20,0.493,0.037
+8,gain,autism-adult,40,0.536,0.019
+9,gain,autism-child,5,0.539,0.047
+10,gain,autism-child,20,0.61,0.039
+11,gain,autism-child,40,0.621,0.03

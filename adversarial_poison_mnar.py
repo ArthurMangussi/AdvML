@@ -19,11 +19,11 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
     _logger = MeLogger()
 
     # Cria diretórios para salvar os resultados do experimento
-    os.makedirs(f"./{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
     
-    with open(f'./{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
+    with open(f'./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
             X = df.drop(columns='target')
@@ -143,7 +143,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     data_imputed = pd.DataFrame(output_md_test.copy(), columns=X.columns)
                     data_imputed['target'] = y_teste
 
-                    data_imputed.to_csv(f"./{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
+                    data_imputed.to_csv(f"./Attacks/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
                     fold += 1
                     
             resultados_final = AnalysisResults.extrai_resultados(tabela_resultados)
@@ -155,7 +155,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                 )
             )
             resultados_mecanismo.to_csv(
-                f'./{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado/{nome}_{model_impt}_{mecanismo}.csv',
+                f'./Attacks/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado/{nome}_{model_impt}_{mecanismo}.csv',
                 
             )        
     return _logger.info(f"Imputation_{model_impt}_done!")
@@ -174,10 +174,10 @@ if __name__ == "__main__":
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
         args_list = [
-                     ("knn",mecanismo,tabela_resultados),
-                     ("mice",mecanismo,tabela_resultados),
-                     ("softImpute",mecanismo,tabela_resultados),
-                     ("gain",mecanismo,tabela_resultados)
+                     ("knn",mecanismo,tabela_resultados,attack_str),
+                     ("mice",mecanismo,tabela_resultados,attack_str),
+                     ("softImpute",mecanismo,tabela_resultados,attack_str),
+                     ("gain",mecanismo,tabela_resultados,attack_str)
                      ]
         
         pool.starmap(pipeline_adversarial,args_list)
