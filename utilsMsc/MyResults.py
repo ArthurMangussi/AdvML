@@ -149,7 +149,7 @@ class AnalysisResults:
 
         for path in args:
             df = pd.read_csv(
-                f".\Resultados Parciais\\{mecanismo_folder}\\{path}.csv", sep=",", index_col=0
+                f".\\Attacks\\{tipo}\\@Geral\\{mecanismo_folder}_Multivariado\\{path}.csv", sep=",", index_col=0
             )
             model_name = path.split("_")[0].upper()
             mecanismo = path.split("_")[1]
@@ -168,7 +168,7 @@ class AnalysisResults:
         final = pd.DataFrame(tabela)
 
         self._logger.info(f"Resultados salvos com sucesso!")
-        final.to_csv(f"Resultados Imputacao/{mecanismo_folder}.csv", sep=",", index=False)
+        final.to_csv(f".\\Attacks\\{tipo}_{mecanismo_folder}_imputation.csv", sep=",", index=False)
         return final
 
     # ------------------------------------------------------------------------

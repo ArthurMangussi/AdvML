@@ -1,5 +1,5 @@
 import pandas as pd 
-
+import numpy as np
 from sklearn.model_selection import StratifiedKFold
 from utilsMsc.MyModels import ModelsImputation
 from utilsMsc.MyUtils import MyPipeline
@@ -46,7 +46,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_train = AdversarialML.attack_poison(X_train=X_treino,
+                    X_adv_train,y_adv = AdversarialML.attack_poison(X_train=X_treino,
                                                           y_train=y_treino,
                                                           X_test=X_teste,
                                                           y_test=y_teste)
@@ -62,7 +62,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
 
                     # Geração dos missing values em cada conjunto de forma independente
                     impt_md_train = mMAR(X=X_treino_norm, 
-                                            y=y_treino, 
+                                            y=np.append(y_treino, y_adv), 
                                             )
                     X_treino_norm_md = impt_md_train.correlated(
                         missing_rate=md

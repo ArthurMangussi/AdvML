@@ -68,8 +68,8 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
                 classification_metrics["AUC"].append({f"{nome}_fold{fold}":auc})
                 fold += 1
                 
-        resultados = pd.DataFrame([classification_metrics])
-        resultados.to_csv("./Baseline/classification_performance_baseline_datasets.csv")
+            resultados = pd.DataFrame([classification_metrics])
+            resultados.to_csv("./Baseline/classification_performance_baseline_datasets.csv")
         _logger.info("Resultados Baseline Classificação salvos com sucesso!")
     
     except Exception as erro:

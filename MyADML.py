@@ -441,14 +441,42 @@ class AdversarialML:
         return dup
     
     # ------------------------------------------------------------------------
-    def get_data(y_raw:np.ndarray):  
+    def get_data(X_raw:pd.DataFrame,
+                 y_raw:np.ndarray,
+                 ):  
+        
+        X_raw = X_raw.astype("float64").values
         y = np.copy(y_raw)
-        labels = np.zeros((y.shape[0], 2))
-        labels[y == 0] = np.array([1, 0])
-        labels[y == 1] = np.array([0, 1])
+                
+        if len(np.unique(y)) == 2:
+            labels = np.zeros((y.shape[0], 2))  
+            labels[y == 0] = np.array([1, 0])
+            labels[y == 1] = np.array([0, 1])
+        elif len(np.unique(y)) == 3:
+            labels = np.zeros((y.shape[0], 3)) 
+            labels[y == 0] = np.array([1, 0, 0])
+            labels[y == 1] = np.array([0, 1, 0])
+            labels[y == 2] = np.array([0, 0, 1])
+        elif len(np.unique(y)) == 4:
+            labels = np.zeros((y.shape[0], 4)) 
+            labels[y == 0] = np.array([1, 0, 0, 0])
+            labels[y == 1] = np.array([0, 1, 0, 0])
+            labels[y == 2] = np.array([0, 0, 1, 0])
+            labels[y == 3] = np.array([0, 0, 0, 1])
+                        
         y = labels
+        n_sample = len(X_raw)
+    
+        order = np.random.permutation(n_sample)
+        
+        X = X_raw[order]
+        y = y[order]
 
-        return y
+        dups = AdversarialML.find_duplicates(X_raw)
+        X_format = X[dups == False]
+        y_format = y[dups == False]
+        
+        return X_format, y_format
     
     # ------------------------------------------------------------------------
     @staticmethod
@@ -527,19 +555,24 @@ class AdversarialML:
 
         # Create ART classifier for scikit-learn SVC
         art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
+        
+        X_train_format, y_train_format = AdversarialML.get_data(X_train, y_train)
+        X_test_format, y_test_format = AdversarialML.get_data(X_test, y_test)
+        attack_idx = np.random.choice(len(X_train_format))
 
-        y_train_formated = AdversarialML.get_data(y_train)
-        y_test_formated = AdversarialML.get_data(y_test)
+        init_attack = np.copy(X_train_format[attack_idx])
+        y_attack = np.array([1, 1]) - np.copy(y_train_format[attack_idx])
+
         attack = PoisoningAttackSVM(classifier=art_classifier, 
-                                    step=0.2, 
+                                    step=0.001, 
                                     eps = 0.3, 
-                                    x_train= X_train_float, 
-                                    y_train= y_train_formated, 
-                                    x_val= X_test.astype("float64").values, 
-                                    y_val= y_test_formated, 
-                                    max_iter=5)
-        x_adv, _ = attack.poison(X_train_float.values, y_train_formated)
-    
+                                    x_train= X_train_format, 
+                                    y_train= y_train_format, 
+                                    x_val= X_test_format, 
+                                    y_val= y_test_format, 
+                                    max_iter=100)
+        x_adv, y_adv = attack.poison(np.array([init_attack]), y=np.array([y_attack]))
+        x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)])
 
-        return pd.DataFrame(x_adv, columns=X_train.columns)
+        return x_result, y_adv[0][1]
 
