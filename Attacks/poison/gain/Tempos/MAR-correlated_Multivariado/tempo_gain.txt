@@ -1,0 +1,522 @@
+Dataset = acute-inflammations com MD = 5
+Tempo de treinamento para fold = 0 foi = 3.415 s
+Tempo de treinamento para fold = 1 foi = 2.760 s
+Tempo de treinamento para fold = 2 foi = 2.835 s
+Tempo de treinamento para fold = 3 foi = 2.922 s
+Tempo de treinamento para fold = 4 foi = 2.866 s
+Dataset = acute-inflammations com MD = 20
+Tempo de treinamento para fold = 0 foi = 4.571 s
+Tempo de treinamento para fold = 1 foi = 3.334 s
+Tempo de treinamento para fold = 2 foi = 3.936 s
+Tempo de treinamento para fold = 3 foi = 3.113 s
+Tempo de treinamento para fold = 4 foi = 2.585 s
+Dataset = acute-inflammations com MD = 40
+Tempo de treinamento para fold = 0 foi = 2.956 s
+Tempo de treinamento para fold = 1 foi = 3.413 s
+Tempo de treinamento para fold = 2 foi = 3.811 s
+Tempo de treinamento para fold = 3 foi = 3.323 s
+Tempo de treinamento para fold = 4 foi = 3.859 s
+Dataset = autism-adolescent com MD = 5
+Tempo de treinamento para fold = 0 foi = 5.693 s
+Tempo de treinamento para fold = 1 foi = 5.902 s
+Tempo de treinamento para fold = 2 foi = 4.166 s
+Tempo de treinamento para fold = 3 foi = 3.201 s
+Tempo de treinamento para fold = 4 foi = 3.582 s
+Dataset = autism-adolescent com MD = 20
+Tempo de treinamento para fold = 0 foi = 4.973 s
+Tempo de treinamento para fold = 1 foi = 4.771 s
+Tempo de treinamento para fold = 2 foi = 4.527 s
+Tempo de treinamento para fold = 3 foi = 7.749 s
+Tempo de treinamento para fold = 4 foi = 6.766 s
+Dataset = autism-adolescent com MD = 40
+Tempo de treinamento para fold = 0 foi = 6.167 s
+Tempo de treinamento para fold = 1 foi = 6.577 s
+Tempo de treinamento para fold = 2 foi = 5.387 s
+Tempo de treinamento para fold = 3 foi = 8.400 s
+Tempo de treinamento para fold = 4 foi = 7.227 s
+Dataset = autism-adult com MD = 5
+Tempo de treinamento para fold = 0 foi = 11.449 s
+Tempo de treinamento para fold = 1 foi = 5.772 s
+Tempo de treinamento para fold = 2 foi = 7.367 s
+Tempo de treinamento para fold = 3 foi = 7.341 s
+Tempo de treinamento para fold = 4 foi = 9.633 s
+Dataset = autism-adult com MD = 20
+Tempo de treinamento para fold = 0 foi = 10.542 s
+Tempo de treinamento para fold = 1 foi = 6.848 s
+Tempo de treinamento para fold = 2 foi = 8.538 s
+Tempo de treinamento para fold = 3 foi = 5.629 s
+Tempo de treinamento para fold = 4 foi = 4.883 s
+Dataset = autism-adult com MD = 40
+Tempo de treinamento para fold = 0 foi = 8.678 s
+Tempo de treinamento para fold = 1 foi = 7.828 s
+Tempo de treinamento para fold = 2 foi = 7.011 s
+Tempo de treinamento para fold = 3 foi = 6.113 s
+Tempo de treinamento para fold = 4 foi = 7.964 s
+Dataset = autism-child com MD = 5
+Tempo de treinamento para fold = 0 foi = 6.743 s
+Tempo de treinamento para fold = 1 foi = 7.450 s
+Tempo de treinamento para fold = 2 foi = 6.595 s
+Tempo de treinamento para fold = 3 foi = 9.703 s
+Tempo de treinamento para fold = 4 foi = 8.813 s
+Dataset = autism-child com MD = 20
+Tempo de treinamento para fold = 0 foi = 10.549 s
+Tempo de treinamento para fold = 1 foi = 9.727 s
+Tempo de treinamento para fold = 2 foi = 7.554 s
+Tempo de treinamento para fold = 3 foi = 7.083 s
+Tempo de treinamento para fold = 4 foi = 11.726 s
+Dataset = autism-child com MD = 40
+Tempo de treinamento para fold = 0 foi = 8.708 s
+Tempo de treinamento para fold = 1 foi = 9.755 s
+Tempo de treinamento para fold = 2 foi = 8.657 s
+Tempo de treinamento para fold = 3 foi = 9.486 s
+Tempo de treinamento para fold = 4 foi = 11.376 s
+Dataset = bc-coimbra com MD = 5
+Tempo de treinamento para fold = 0 foi = 10.432 s
+Tempo de treinamento para fold = 1 foi = 8.880 s
+Tempo de treinamento para fold = 2 foi = 11.177 s
+Tempo de treinamento para fold = 3 foi = 11.641 s
+Tempo de treinamento para fold = 4 foi = 12.281 s
+Dataset = bc-coimbra com MD = 20
+Tempo de treinamento para fold = 0 foi = 11.831 s
+Tempo de treinamento para fold = 1 foi = 9.946 s
+Tempo de treinamento para fold = 2 foi = 12.399 s
+Tempo de treinamento para fold = 3 foi = 12.321 s
+Tempo de treinamento para fold = 4 foi = 15.926 s
+Dataset = bc-coimbra com MD = 40
+Tempo de treinamento para fold = 0 foi = 17.669 s
+Tempo de treinamento para fold = 1 foi = 9.008 s
+Tempo de treinamento para fold = 2 foi = 14.038 s
+Tempo de treinamento para fold = 3 foi = 7.905 s
+Tempo de treinamento para fold = 4 foi = 21.029 s
+Dataset = blood-transfusion com MD = 5
+Tempo de treinamento para fold = 0 foi = 16.737 s
+Tempo de treinamento para fold = 1 foi = 10.893 s
+Tempo de treinamento para fold = 2 foi = 10.076 s
+Tempo de treinamento para fold = 3 foi = 10.630 s
+Tempo de treinamento para fold = 4 foi = 9.954 s
+Dataset = blood-transfusion com MD = 20
+Tempo de treinamento para fold = 0 foi = 13.897 s
+Tempo de treinamento para fold = 1 foi = 15.520 s
+Tempo de treinamento para fold = 2 foi = 12.936 s
+Tempo de treinamento para fold = 3 foi = 10.431 s
+Tempo de treinamento para fold = 4 foi = 8.041 s
+Dataset = blood-transfusion com MD = 40
+Tempo de treinamento para fold = 0 foi = 12.271 s
+Tempo de treinamento para fold = 1 foi = 12.058 s
+Tempo de treinamento para fold = 2 foi = 7.522 s
+Tempo de treinamento para fold = 3 foi = 16.203 s
+Tempo de treinamento para fold = 4 foi = 15.361 s
+Dataset = contraceptive-methods com MD = 5
+Tempo de treinamento para fold = 0 foi = 12.805 s
+Tempo de treinamento para fold = 1 foi = 18.151 s
+Tempo de treinamento para fold = 2 foi = 11.948 s
+Tempo de treinamento para fold = 3 foi = 13.453 s
+Tempo de treinamento para fold = 4 foi = 14.185 s
+Dataset = contraceptive-methods com MD = 20
+Tempo de treinamento para fold = 0 foi = 8.404 s
+Tempo de treinamento para fold = 1 foi = 15.864 s
+Tempo de treinamento para fold = 2 foi = 9.944 s
+Tempo de treinamento para fold = 3 foi = 12.037 s
+Tempo de treinamento para fold = 4 foi = 18.887 s
+Dataset = contraceptive-methods com MD = 40
+Tempo de treinamento para fold = 0 foi = 15.220 s
+Tempo de treinamento para fold = 1 foi = 16.455 s
+Tempo de treinamento para fold = 2 foi = 9.484 s
+Tempo de treinamento para fold = 3 foi = 9.334 s
+Tempo de treinamento para fold = 4 foi = 11.447 s
+Dataset = diabetic com MD = 5
+Tempo de treinamento para fold = 0 foi = 15.504 s
+Tempo de treinamento para fold = 1 foi = 9.598 s
+Tempo de treinamento para fold = 2 foi = 9.710 s
+Tempo de treinamento para fold = 3 foi = 15.140 s
+Tempo de treinamento para fold = 4 foi = 9.879 s
+Dataset = diabetic com MD = 20
+Tempo de treinamento para fold = 0 foi = 10.472 s
+Tempo de treinamento para fold = 1 foi = 10.477 s
+Tempo de treinamento para fold = 2 foi = 10.219 s
+Tempo de treinamento para fold = 3 foi = 15.471 s
+Tempo de treinamento para fold = 4 foi = 10.433 s
+Dataset = diabetic com MD = 40
+Tempo de treinamento para fold = 0 foi = 16.468 s
+Tempo de treinamento para fold = 1 foi = 10.800 s
+Tempo de treinamento para fold = 2 foi = 10.606 s
+Tempo de treinamento para fold = 3 foi = 10.836 s
+Tempo de treinamento para fold = 4 foi = 13.748 s
+Dataset = echocardiogram com MD = 5
+Tempo de treinamento para fold = 0 foi = 14.702 s
+Tempo de treinamento para fold = 1 foi = 10.936 s
+Tempo de treinamento para fold = 2 foi = 11.059 s
+Tempo de treinamento para fold = 3 foi = 11.254 s
+Tempo de treinamento para fold = 4 foi = 16.071 s
+Dataset = echocardiogram com MD = 20
+Tempo de treinamento para fold = 0 foi = 11.992 s
+Tempo de treinamento para fold = 1 foi = 17.799 s
+Tempo de treinamento para fold = 2 foi = 13.161 s
+Tempo de treinamento para fold = 3 foi = 14.116 s
+Tempo de treinamento para fold = 4 foi = 12.070 s
+Dataset = echocardiogram com MD = 40
+Tempo de treinamento para fold = 0 foi = 12.066 s
+Tempo de treinamento para fold = 1 foi = 12.323 s
+Tempo de treinamento para fold = 2 foi = 15.109 s
+Tempo de treinamento para fold = 3 foi = 13.006 s
+Tempo de treinamento para fold = 4 foi = 14.546 s
+Dataset = fertility com MD = 5
+Tempo de treinamento para fold = 0 foi = 13.563 s
+Tempo de treinamento para fold = 1 foi = 13.845 s
+Tempo de treinamento para fold = 2 foi = 12.943 s
+Tempo de treinamento para fold = 3 foi = 13.212 s
+Tempo de treinamento para fold = 4 foi = 13.177 s
+Dataset = fertility com MD = 20
+Tempo de treinamento para fold = 0 foi = 16.003 s
+Tempo de treinamento para fold = 1 foi = 20.974 s
+Tempo de treinamento para fold = 2 foi = 17.253 s
+Tempo de treinamento para fold = 3 foi = 14.198 s
+Tempo de treinamento para fold = 4 foi = 13.879 s
+Dataset = fertility com MD = 40
+Tempo de treinamento para fold = 0 foi = 13.839 s
+Tempo de treinamento para fold = 1 foi = 18.559 s
+Tempo de treinamento para fold = 2 foi = 14.814 s
+Tempo de treinamento para fold = 3 foi = 22.757 s
+Tempo de treinamento para fold = 4 foi = 15.247 s
+Dataset = german-credit com MD = 5
+Tempo de treinamento para fold = 0 foi = 14.729 s
+Tempo de treinamento para fold = 1 foi = 16.568 s
+Tempo de treinamento para fold = 2 foi = 17.647 s
+Tempo de treinamento para fold = 3 foi = 24.052 s
+Tempo de treinamento para fold = 4 foi = 15.178 s
+Dataset = german-credit com MD = 20
+Tempo de treinamento para fold = 0 foi = 22.768 s
+Tempo de treinamento para fold = 1 foi = 17.183 s
+Tempo de treinamento para fold = 2 foi = 27.065 s
+Tempo de treinamento para fold = 3 foi = 23.719 s
+Tempo de treinamento para fold = 4 foi = 25.861 s
+Dataset = german-credit com MD = 40
+Tempo de treinamento para fold = 0 foi = 19.782 s
+Tempo de treinamento para fold = 1 foi = 25.052 s
+Tempo de treinamento para fold = 2 foi = 17.188 s
+Tempo de treinamento para fold = 3 foi = 16.933 s
+Tempo de treinamento para fold = 4 foi = 23.050 s
+Dataset = haberman com MD = 5
+Tempo de treinamento para fold = 0 foi = 19.631 s
+Tempo de treinamento para fold = 1 foi = 16.431 s
+Tempo de treinamento para fold = 2 foi = 22.704 s
+Tempo de treinamento para fold = 3 foi = 17.035 s
+Tempo de treinamento para fold = 4 foi = 18.045 s
+Dataset = haberman com MD = 20
+Tempo de treinamento para fold = 0 foi = 17.893 s
+Tempo de treinamento para fold = 1 foi = 16.881 s
+Tempo de treinamento para fold = 2 foi = 24.902 s
+Tempo de treinamento para fold = 3 foi = 19.675 s
+Tempo de treinamento para fold = 4 foi = 22.939 s
+Dataset = haberman com MD = 40
+Tempo de treinamento para fold = 0 foi = 25.430 s
+Tempo de treinamento para fold = 1 foi = 21.892 s
+Tempo de treinamento para fold = 2 foi = 29.276 s
+Tempo de treinamento para fold = 3 foi = 17.991 s
+Tempo de treinamento para fold = 4 foi = 24.376 s
+Dataset = hcv-egyptian com MD = 5
+Tempo de treinamento para fold = 0 foi = 17.979 s
+Tempo de treinamento para fold = 1 foi = 18.362 s
+Tempo de treinamento para fold = 2 foi = 23.028 s
+Tempo de treinamento para fold = 3 foi = 26.821 s
+Tempo de treinamento para fold = 4 foi = 19.405 s
+Dataset = hcv-egyptian com MD = 20
+Tempo de treinamento para fold = 0 foi = 19.435 s
+Tempo de treinamento para fold = 1 foi = 19.697 s
+Tempo de treinamento para fold = 2 foi = 19.512 s
+Tempo de treinamento para fold = 3 foi = 19.762 s
+Tempo de treinamento para fold = 4 foi = 19.907 s
+Dataset = hcv-egyptian com MD = 40
+Tempo de treinamento para fold = 0 foi = 19.857 s
+Tempo de treinamento para fold = 1 foi = 25.430 s
+Tempo de treinamento para fold = 2 foi = 22.167 s
+Tempo de treinamento para fold = 3 foi = 20.751 s
+Tempo de treinamento para fold = 4 foi = 20.469 s
+Dataset = heart-cleveland com MD = 5
+Tempo de treinamento para fold = 0 foi = 21.028 s
+Tempo de treinamento para fold = 1 foi = 20.349 s
+Tempo de treinamento para fold = 2 foi = 20.664 s
+Tempo de treinamento para fold = 3 foi = 23.691 s
+Tempo de treinamento para fold = 4 foi = 21.434 s
+Dataset = heart-cleveland com MD = 20
+Tempo de treinamento para fold = 0 foi = 21.317 s
+Tempo de treinamento para fold = 1 foi = 21.326 s
+Tempo de treinamento para fold = 2 foi = 25.757 s
+Tempo de treinamento para fold = 3 foi = 21.629 s
+Tempo de treinamento para fold = 4 foi = 24.492 s
+Dataset = heart-cleveland com MD = 40
+Tempo de treinamento para fold = 0 foi = 21.849 s
+Tempo de treinamento para fold = 1 foi = 21.832 s
+Tempo de treinamento para fold = 2 foi = 22.559 s
+Tempo de treinamento para fold = 3 foi = 22.462 s
+Tempo de treinamento para fold = 4 foi = 23.061 s
+Dataset = hepatitis com MD = 5
+Tempo de treinamento para fold = 0 foi = 20.523 s
+Tempo de treinamento para fold = 1 foi = 21.592 s
+Tempo de treinamento para fold = 2 foi = 21.398 s
+Tempo de treinamento para fold = 3 foi = 27.697 s
+Tempo de treinamento para fold = 4 foi = 21.671 s
+Dataset = hepatitis com MD = 20
+Tempo de treinamento para fold = 0 foi = 22.007 s
+Tempo de treinamento para fold = 1 foi = 21.609 s
+Tempo de treinamento para fold = 2 foi = 21.341 s
+Tempo de treinamento para fold = 3 foi = 21.660 s
+Tempo de treinamento para fold = 4 foi = 22.330 s
+Dataset = hepatitis com MD = 40
+Tempo de treinamento para fold = 0 foi = 22.584 s
+Tempo de treinamento para fold = 1 foi = 22.960 s
+Tempo de treinamento para fold = 2 foi = 23.639 s
+Tempo de treinamento para fold = 3 foi = 23.664 s
+Tempo de treinamento para fold = 4 foi = 24.104 s
+Dataset = iris com MD = 5
+Tempo de treinamento para fold = 0 foi = 23.605 s
+Tempo de treinamento para fold = 1 foi = 23.055 s
+Tempo de treinamento para fold = 2 foi = 22.692 s
+Tempo de treinamento para fold = 3 foi = 23.742 s
+Tempo de treinamento para fold = 4 foi = 32.411 s
+Dataset = iris com MD = 20
+Tempo de treinamento para fold = 0 foi = 23.745 s
+Tempo de treinamento para fold = 1 foi = 23.946 s
+Tempo de treinamento para fold = 2 foi = 23.804 s
+Tempo de treinamento para fold = 3 foi = 24.290 s
+Tempo de treinamento para fold = 4 foi = 24.924 s
+Dataset = iris com MD = 40
+Tempo de treinamento para fold = 0 foi = 29.105 s
+Tempo de treinamento para fold = 1 foi = 24.702 s
+Tempo de treinamento para fold = 2 foi = 24.565 s
+Tempo de treinamento para fold = 3 foi = 24.009 s
+Tempo de treinamento para fold = 4 foi = 23.992 s
+Dataset = liver com MD = 5
+Tempo de treinamento para fold = 0 foi = 24.966 s
+Tempo de treinamento para fold = 1 foi = 26.424 s
+Tempo de treinamento para fold = 2 foi = 25.690 s
+Tempo de treinamento para fold = 3 foi = 27.746 s
+Tempo de treinamento para fold = 4 foi = 25.793 s
+Dataset = liver com MD = 20
+Tempo de treinamento para fold = 0 foi = 25.622 s
+Tempo de treinamento para fold = 1 foi = 26.010 s
+Tempo de treinamento para fold = 2 foi = 25.715 s
+Tempo de treinamento para fold = 3 foi = 31.539 s
+Tempo de treinamento para fold = 4 foi = 31.775 s
+Dataset = liver com MD = 40
+Tempo de treinamento para fold = 0 foi = 31.296 s
+Tempo de treinamento para fold = 1 foi = 26.730 s
+Tempo de treinamento para fold = 2 foi = 26.414 s
+Tempo de treinamento para fold = 3 foi = 26.354 s
+Tempo de treinamento para fold = 4 foi = 29.298 s
+Dataset = mathernal-risk com MD = 5
+Tempo de treinamento para fold = 0 foi = 28.551 s
+Tempo de treinamento para fold = 1 foi = 34.517 s
+Tempo de treinamento para fold = 2 foi = 29.316 s
+Tempo de treinamento para fold = 3 foi = 35.397 s
+Tempo de treinamento para fold = 4 foi = 30.024 s
+Dataset = mathernal-risk com MD = 20
+Tempo de treinamento para fold = 0 foi = 42.819 s
+Tempo de treinamento para fold = 1 foi = 29.086 s
+Tempo de treinamento para fold = 2 foi = 29.799 s
+Tempo de treinamento para fold = 3 foi = 29.617 s
+Tempo de treinamento para fold = 4 foi = 30.482 s
+Dataset = mathernal-risk com MD = 40
+Tempo de treinamento para fold = 0 foi = 32.618 s
+Tempo de treinamento para fold = 1 foi = 47.900 s
+Tempo de treinamento para fold = 2 foi = 52.157 s
+Tempo de treinamento para fold = 3 foi = 50.809 s
+Tempo de treinamento para fold = 4 foi = 65.479 s
+Dataset = npha com MD = 5
+Tempo de treinamento para fold = 0 foi = 50.060 s
+Tempo de treinamento para fold = 1 foi = 58.700 s
+Tempo de treinamento para fold = 2 foi = 49.235 s
+Tempo de treinamento para fold = 3 foi = 56.828 s
+Tempo de treinamento para fold = 4 foi = 49.449 s
+Dataset = npha com MD = 20
+Tempo de treinamento para fold = 0 foi = 51.332 s
+Tempo de treinamento para fold = 1 foi = 60.272 s
+Tempo de treinamento para fold = 2 foi = 52.003 s
+Tempo de treinamento para fold = 3 foi = 60.535 s
+Tempo de treinamento para fold = 4 foi = 50.628 s
+Dataset = npha com MD = 40
+Tempo de treinamento para fold = 0 foi = 62.704 s
+Tempo de treinamento para fold = 1 foi = 57.302 s
+Tempo de treinamento para fold = 2 foi = 51.543 s
+Tempo de treinamento para fold = 3 foi = 56.854 s
+Tempo de treinamento para fold = 4 foi = 52.109 s
+Dataset = parkinsons com MD = 5
+Tempo de treinamento para fold = 0 foi = 54.571 s
+Tempo de treinamento para fold = 1 foi = 51.574 s
+Tempo de treinamento para fold = 2 foi = 52.714 s
+Tempo de treinamento para fold = 3 foi = 57.269 s
+Tempo de treinamento para fold = 4 foi = 54.872 s
+Dataset = parkinsons com MD = 20
+Tempo de treinamento para fold = 0 foi = 62.080 s
+Tempo de treinamento para fold = 1 foi = 54.080 s
+Tempo de treinamento para fold = 2 foi = 60.112 s
+Tempo de treinamento para fold = 3 foi = 65.506 s
+Tempo de treinamento para fold = 4 foi = 51.577 s
+Dataset = parkinsons com MD = 40
+Tempo de treinamento para fold = 0 foi = 58.220 s
+Tempo de treinamento para fold = 1 foi = 57.814 s
+Tempo de treinamento para fold = 2 foi = 56.759 s
+Tempo de treinamento para fold = 3 foi = 66.870 s
+Tempo de treinamento para fold = 4 foi = 67.975 s
+Dataset = phoneme com MD = 5
+Tempo de treinamento para fold = 0 foi = 59.131 s
+Tempo de treinamento para fold = 1 foi = 51.929 s
+Tempo de treinamento para fold = 2 foi = 34.227 s
+Tempo de treinamento para fold = 3 foi = 35.443 s
+Tempo de treinamento para fold = 4 foi = 34.619 s
+Dataset = phoneme com MD = 20
+Tempo de treinamento para fold = 0 foi = 35.775 s
+Tempo de treinamento para fold = 1 foi = 35.337 s
+Tempo de treinamento para fold = 2 foi = 34.995 s
+Tempo de treinamento para fold = 3 foi = 35.905 s
+Tempo de treinamento para fold = 4 foi = 35.602 s
+Dataset = phoneme com MD = 40
+Tempo de treinamento para fold = 0 foi = 45.735 s
+Tempo de treinamento para fold = 1 foi = 36.449 s
+Tempo de treinamento para fold = 2 foi = 36.362 s
+Tempo de treinamento para fold = 3 foi = 52.647 s
+Tempo de treinamento para fold = 4 foi = 51.893 s
+Dataset = pima-diabetes com MD = 5
+Tempo de treinamento para fold = 0 foi = 40.922 s
+Tempo de treinamento para fold = 1 foi = 41.506 s
+Tempo de treinamento para fold = 2 foi = 40.898 s
+Tempo de treinamento para fold = 3 foi = 40.165 s
+Tempo de treinamento para fold = 4 foi = 41.975 s
+Dataset = pima-diabetes com MD = 20
+Tempo de treinamento para fold = 0 foi = 40.520 s
+Tempo de treinamento para fold = 1 foi = 43.198 s
+Tempo de treinamento para fold = 2 foi = 40.742 s
+Tempo de treinamento para fold = 3 foi = 41.184 s
+Tempo de treinamento para fold = 4 foi = 40.783 s
+Dataset = pima-diabetes com MD = 40
+Tempo de treinamento para fold = 0 foi = 40.506 s
+Tempo de treinamento para fold = 1 foi = 43.307 s
+Tempo de treinamento para fold = 2 foi = 47.130 s
+Tempo de treinamento para fold = 3 foi = 41.359 s
+Tempo de treinamento para fold = 4 foi = 42.906 s
+Dataset = proba_football com MD = 5
+Tempo de treinamento para fold = 0 foi = 42.835 s
+Tempo de treinamento para fold = 1 foi = 42.133 s
+Tempo de treinamento para fold = 2 foi = 42.293 s
+Tempo de treinamento para fold = 3 foi = 42.305 s
+Tempo de treinamento para fold = 4 foi = 44.102 s
+Dataset = proba_football com MD = 20
+Tempo de treinamento para fold = 0 foi = 43.603 s
+Tempo de treinamento para fold = 1 foi = 44.360 s
+Tempo de treinamento para fold = 2 foi = 52.228 s
+Tempo de treinamento para fold = 3 foi = 53.938 s
+Tempo de treinamento para fold = 4 foi = 43.946 s
+Dataset = proba_football com MD = 40
+Tempo de treinamento para fold = 0 foi = 48.195 s
+Tempo de treinamento para fold = 1 foi = 43.697 s
+Tempo de treinamento para fold = 2 foi = 44.939 s
+Tempo de treinamento para fold = 3 foi = 46.244 s
+Tempo de treinamento para fold = 4 foi = 44.239 s
+Dataset = ricci com MD = 5
+Tempo de treinamento para fold = 0 foi = 44.308 s
+Tempo de treinamento para fold = 1 foi = 44.706 s
+Tempo de treinamento para fold = 2 foi = 44.986 s
+Tempo de treinamento para fold = 3 foi = 45.748 s
+Tempo de treinamento para fold = 4 foi = 50.457 s
+Dataset = ricci com MD = 20
+Tempo de treinamento para fold = 0 foi = 46.463 s
+Tempo de treinamento para fold = 1 foi = 45.404 s
+Tempo de treinamento para fold = 2 foi = 56.526 s
+Tempo de treinamento para fold = 3 foi = 49.133 s
+Tempo de treinamento para fold = 4 foi = 49.691 s
+Dataset = ricci com MD = 40
+Tempo de treinamento para fold = 0 foi = 47.637 s
+Tempo de treinamento para fold = 1 foi = 45.985 s
+Tempo de treinamento para fold = 2 foi = 46.292 s
+Tempo de treinamento para fold = 3 foi = 47.549 s
+Tempo de treinamento para fold = 4 foi = 46.587 s
+Dataset = sa-heart com MD = 5
+Tempo de treinamento para fold = 0 foi = 47.019 s
+Tempo de treinamento para fold = 1 foi = 51.496 s
+Tempo de treinamento para fold = 2 foi = 47.468 s
+Tempo de treinamento para fold = 3 foi = 49.126 s
+Tempo de treinamento para fold = 4 foi = 48.308 s
+Dataset = sa-heart com MD = 20
+Tempo de treinamento para fold = 0 foi = 49.130 s
+Tempo de treinamento para fold = 1 foi = 49.286 s
+Tempo de treinamento para fold = 2 foi = 48.388 s
+Tempo de treinamento para fold = 3 foi = 49.653 s
+Tempo de treinamento para fold = 4 foi = 50.640 s
+Dataset = sa-heart com MD = 40
+Tempo de treinamento para fold = 0 foi = 49.903 s
+Tempo de treinamento para fold = 1 foi = 49.564 s
+Tempo de treinamento para fold = 2 foi = 53.281 s
+Tempo de treinamento para fold = 3 foi = 66.162 s
+Tempo de treinamento para fold = 4 foi = 52.860 s
+Dataset = thoracic-surgery com MD = 5
+Tempo de treinamento para fold = 0 foi = 51.822 s
+Tempo de treinamento para fold = 1 foi = 53.343 s
+Tempo de treinamento para fold = 2 foi = 53.542 s
+Tempo de treinamento para fold = 3 foi = 53.727 s
+Tempo de treinamento para fold = 4 foi = 48.281 s
+Dataset = thoracic-surgery com MD = 20
+Tempo de treinamento para fold = 0 foi = 50.181 s
+Tempo de treinamento para fold = 1 foi = 51.766 s
+Tempo de treinamento para fold = 2 foi = 51.726 s
+Tempo de treinamento para fold = 3 foi = 53.078 s
+Tempo de treinamento para fold = 4 foi = 53.258 s
+Dataset = thoracic-surgery com MD = 40
+Tempo de treinamento para fold = 0 foi = 52.510 s
+Tempo de treinamento para fold = 1 foi = 53.238 s
+Tempo de treinamento para fold = 2 foi = 52.537 s
+Tempo de treinamento para fold = 3 foi = 52.941 s
+Tempo de treinamento para fold = 4 foi = 58.332 s
+Dataset = thyroid-recurrence com MD = 5
+Tempo de treinamento para fold = 0 foi = 52.615 s
+Tempo de treinamento para fold = 1 foi = 53.107 s
+Tempo de treinamento para fold = 2 foi = 53.654 s
+Tempo de treinamento para fold = 3 foi = 53.527 s
+Tempo de treinamento para fold = 4 foi = 59.549 s
+Dataset = thyroid-recurrence com MD = 20
+Tempo de treinamento para fold = 0 foi = 53.899 s
+Tempo de treinamento para fold = 1 foi = 63.589 s
+Tempo de treinamento para fold = 2 foi = 55.145 s
+Tempo de treinamento para fold = 3 foi = 55.563 s
+Tempo de treinamento para fold = 4 foi = 55.569 s
+Dataset = thyroid-recurrence com MD = 40
+Tempo de treinamento para fold = 0 foi = 55.202 s
+Tempo de treinamento para fold = 1 foi = 55.178 s
+Tempo de treinamento para fold = 2 foi = 55.806 s
+Tempo de treinamento para fold = 3 foi = 55.791 s
+Tempo de treinamento para fold = 4 foi = 56.178 s
+Dataset = wine com MD = 5
+Tempo de treinamento para fold = 0 foi = 56.076 s
+Tempo de treinamento para fold = 1 foi = 59.191 s
+Tempo de treinamento para fold = 2 foi = 56.611 s
+Tempo de treinamento para fold = 3 foi = 57.934 s
+Tempo de treinamento para fold = 4 foi = 61.214 s
+Dataset = wine com MD = 20
+Tempo de treinamento para fold = 0 foi = 57.640 s
+Tempo de treinamento para fold = 1 foi = 57.828 s
+Tempo de treinamento para fold = 2 foi = 58.438 s
+Tempo de treinamento para fold = 3 foi = 58.145 s
+Tempo de treinamento para fold = 4 foi = 69.985 s
+Dataset = wine com MD = 40
+Tempo de treinamento para fold = 0 foi = 58.779 s
+Tempo de treinamento para fold = 1 foi = 61.298 s
+Tempo de treinamento para fold = 2 foi = 60.389 s
+Tempo de treinamento para fold = 3 foi = 58.797 s
+Tempo de treinamento para fold = 4 foi = 61.374 s
+Dataset = wiscosin com MD = 5
+Tempo de treinamento para fold = 0 foi = 60.350 s
+Tempo de treinamento para fold = 1 foi = 59.995 s
+Tempo de treinamento para fold = 2 foi = 60.322 s
+Tempo de treinamento para fold = 3 foi = 68.712 s
+Tempo de treinamento para fold = 4 foi = 65.052 s
+Dataset = wiscosin com MD = 20
+Tempo de treinamento para fold = 0 foi = 60.131 s
+Tempo de treinamento para fold = 1 foi = 61.287 s
+Tempo de treinamento para fold = 2 foi = 60.438 s
+Tempo de treinamento para fold = 3 foi = 62.695 s
+Tempo de treinamento para fold = 4 foi = 62.171 s
+Dataset = wiscosin com MD = 40
+Tempo de treinamento para fold = 0 foi = 63.577 s
+Tempo de treinamento para fold = 1 foi = 62.426 s
+Tempo de treinamento para fold = 2 foi = 64.056 s
+Tempo de treinamento para fold = 3 foi = 62.682 s
+Tempo de treinamento para fold = 4 foi = 61.706 s
