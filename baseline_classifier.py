@@ -15,7 +15,9 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
     """
     _logger = MeLogger()
     try:
-        classification_metrics = {"F1-score":[],
+        classification_metrics = {"Dataset":[],
+                                  "fold":[],
+                                "F1-score":[],
                                 "Accuracy":[],
                                 "Recall":[],
                                 "AUC":[]}
@@ -62,14 +64,16 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
                                         y_score=model.predict_proba(X_teste_norm),
                                         multi_class="ovr")
 
-                classification_metrics["F1-score"].append({f"{nome}_fold{fold}":round(f1,3)})
-                classification_metrics["Accuracy"].append({f"{nome}_fold{fold}":round(acc,3)})
-                classification_metrics["Recall"].append({f"{nome}_fold{fold}":round(rec,3)})
-                classification_metrics["AUC"].append({f"{nome}_fold{fold}":auc})
+                classification_metrics["Dataset"].append(nome)
+                classification_metrics["fold"].append(fold)
+                classification_metrics["F1-score"].append(round(f1,3))
+                classification_metrics["Accuracy"].append(round(acc,3))
+                classification_metrics["Recall"].append(round(rec,3))
+                classification_metrics["AUC"].append(round(auc,3))
                 fold += 1
                 
-            resultados = pd.DataFrame([classification_metrics])
-            resultados.to_csv("./Baseline/classification_performance_baseline_datasets.csv")
+        resultados = pd.DataFrame(classification_metrics)
+        resultados.to_csv("./Baseline/classification_performance_baseline_datasets.csv", index=False)
         _logger.info("Resultados Baseline Classificação salvos com sucesso!")
     
     except Exception as erro:
