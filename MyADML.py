@@ -357,13 +357,13 @@ class AdversarialML:
     def cria_tabela(self):
         tabela_resultados = {}
 
-        tabela_resultados["datasets"] = [self.acute,
-                                         self.autism_teen,
-                                         self.autism_adult,
-                                         self.autism_child,
-                                         #self.bank,
-                                         self.bc_coimbra,
-                                         self.blood_transfusion,
+        tabela_resultados["datasets"] = [#self.acute,
+                                        #  self.autism_teen,
+                                        #  self.autism_adult,
+                                        #  self.autism_child,
+                                        #  #self.bank,
+                                        #  self.bc_coimbra,
+                                        #  self.blood_transfusion,
                                          self.contraceptive,
                                          self.diabetic,
                                          self.echocardiogram,
@@ -561,7 +561,15 @@ class AdversarialML:
         attack_idx = np.random.choice(len(X_train_format))
 
         init_attack = np.copy(X_train_format[attack_idx])
-        y_attack = np.array([1, 1]) - np.copy(y_train_format[attack_idx])
+        if y_train_format.shape[1] == 2:
+            y_attack = np.array([1, 1]) - np.copy(y_train_format[attack_idx])
+        elif y_train_format.shape[1] == 3:
+            y_attack = np.array([1, 1, 1]) - np.copy(y_train_format[attack_idx])
+        elif y_train_format.shape[1] == 4:
+            y_attack = np.array([1, 1, 1, 1]) - np.copy(y_train_format[attack_idx])
+        else:
+            raise ValueError("Deu erro no shape do y_train_format")
+
 
         attack = PoisoningAttackSVM(classifier=art_classifier, 
                                     step=0.001, 
