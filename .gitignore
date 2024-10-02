@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+nohup.out
+
+/Python-3.11.0
+
 # Distribution / packaging
 .Python
 build/

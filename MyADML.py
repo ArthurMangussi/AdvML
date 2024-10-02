@@ -570,15 +570,14 @@ class AdversarialML:
         else:
             raise ValueError("Deu erro no shape do y_train_format")
 
-
         attack = PoisoningAttackSVM(classifier=art_classifier, 
                                     step=0.001, 
-                                    eps = 0.3, 
+                                    eps = 1.0, 
                                     x_train= X_train_format, 
                                     y_train= y_train_format, 
                                     x_val= X_test_format, 
                                     y_val= y_test_format, 
-                                    max_iter=100)
+                                    max_iter=25)
         x_adv, y_adv = attack.poison(np.array([init_attack]), y=np.array([y_attack]))
         x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)])
 
