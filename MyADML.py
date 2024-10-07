@@ -357,13 +357,13 @@ class AdversarialML:
     def cria_tabela(self):
         tabela_resultados = {}
 
-        tabela_resultados["datasets"] = [#self.acute,
-                                        #  self.autism_teen,
-                                        #  self.autism_adult,
-                                        #  self.autism_child,
-                                        #  #self.bank,
-                                        #  self.bc_coimbra,
-                                        #  self.blood_transfusion,
+        tabela_resultados["datasets"] = [self.acute,
+                                         self.autism_teen,
+                                         self.autism_adult,
+                                         self.autism_child,
+                                          #self.bank,
+                                         self.bc_coimbra,
+                                         self.blood_transfusion,
                                          self.contraceptive,
                                          self.diabetic,
                                          self.echocardiogram,

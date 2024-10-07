@@ -11,7 +11,7 @@ __author__ = 'Arthur Dantas Mangussi'
 from utilsMsc.MyResults import AnalysisResults
 
 
-type_attack = 'baseline'
+type_attack = 'poison'
 
 for MD_mechanism in ["MAR-correlated", "MNAR-determisticTrue"]:
     r = AnalysisResults()

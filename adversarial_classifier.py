@@ -128,7 +128,7 @@ if __name__ == "__main__":
                         ]
 
     for mecanismo in ["MAR-correlated_Multivariado", "MNAR-determisticTrue_Multivariado"]:
-        for attack_str in ["evasion", "poison"]:
+        for attack_str in ["evasion"]:
     
             pipeline_attacked_classification_performance(attack=attack_str,
                                                         model_impt="gain",
