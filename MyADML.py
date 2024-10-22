@@ -233,7 +233,7 @@ class AdversarialML:
     def pre_processing_haberman(self):
         haberman_df = self.datasets["dataset_43_haberman"].copy()
         haberman_df = self._prep.label_encoder(haberman_df, ["target"])
-        return haberman_df
+        return haberman_df.astype("float64")
     
     # ------------------------------------------------------------------------
     def pre_processing_mathernal_rick(self):
@@ -282,7 +282,7 @@ class AdversarialML:
         hepatitis = self.datasets['hepatitis'].copy()
         hepatitis = hepatitis.replace("?", np.nan).dropna()
         hepatitis = self._prep.label_encoder(hepatitis, ["target"])
-        return hepatitis
+        return hepatitis.astype("float64")
     
     # ------------------------------------------------------------------------
     def pre_processing_football(self):
@@ -306,7 +306,7 @@ class AdversarialML:
         echocardiogram_df = echocardiogram_df.replace("?", np.nan).dropna()
         echocardiogram_df = echocardiogram_df.drop(columns=["name","group","mult"])
         echocardiogram_df = self._prep.label_encoder(echocardiogram_df, ["target"])
-        return echocardiogram_df
+        return echocardiogram_df.astype("float64")
     
     # ------------------------------------------------------------------------
     def pre_processing_phoneme(self):

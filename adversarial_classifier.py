@@ -1,10 +1,8 @@
 # Código para classificação dos datasets imputados
 import xgboost as xgb
-from MyADML import AdversarialML
 from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyPreprocessing import PreprocessingDatasets
 from sklearn.model_selection import StratifiedKFold
-from utilsMsc.MyUtils import MyPipeline
 import numpy as np
 import pandas as pd
 
