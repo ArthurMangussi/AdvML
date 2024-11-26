@@ -7,7 +7,7 @@ from utilsMsc.MyPreprocessing import PreprocessingDatasets
 from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
-from MyADML import AdversarialML
+from utilsMsc.MyADML import AdversarialML
 import multiprocessing
 
 from mdatagen.multivariate.mMAR import mMAR
@@ -16,6 +16,7 @@ from time import perf_counter
 import os 
 
 def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,set_attack:str):
+    "Main pipeline to perform adversarial evasion attack under MAR multivariate mechanism."
     _logger = MeLogger()
 
     # Cria diretórios para salvar os resultados do experimento
@@ -162,7 +163,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
 
 if __name__ == "__main__":
 
-    diretorio = "./DatasetsADVS"
+    diretorio = "./data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
@@ -174,9 +175,9 @@ if __name__ == "__main__":
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
         args_list = [
-                     #("knn",mecanismo,tabela_resultados,attack_str),
-                     #("mice",mecanismo,tabela_resultados,attack_str),
-                     #("softImpute",mecanismo,tabela_resultados,attack_str),
+                     ("knn",mecanismo,tabela_resultados,attack_str),
+                     ("mice",mecanismo,tabela_resultados,attack_str),
+                     ("softImpute",mecanismo,tabela_resultados,attack_str),
                      ("gain",mecanismo,tabela_resultados,attack_str)
                      ]
         

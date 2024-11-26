@@ -1,6 +1,6 @@
 pandas==2.2.2
 scikit-learn==1.5.0
-mdatagen==0.1.63
+mdatagen==0.1.71
 tensorflow==2.15.0
 numpy==1.26.4
 tqdm==4.66.1

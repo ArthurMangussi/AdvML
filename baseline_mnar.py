@@ -7,7 +7,7 @@ from utilsMsc.MyPreprocessing import PreprocessingDatasets
 from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
-from MyADML import AdversarialML
+from utilsMsc.MyADML import AdversarialML
 import multiprocessing
 
 from mdatagen.multivariate.mMNAR import mMNAR
@@ -156,7 +156,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
 
 if __name__ == "__main__":
 
-    diretorio = "./DatasetsADVS"
+    diretorio = "./data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)

@@ -1,7 +1,7 @@
 import pandas as pd
 from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyUtils import MyPipeline
-from MyADML import AdversarialML
+from utilsMsc.MyADML import AdversarialML
 import os
 from sdmetrics.single_column import KSComplement, CSTest
 

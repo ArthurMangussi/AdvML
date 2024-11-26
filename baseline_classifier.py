@@ -1,5 +1,5 @@
 import xgboost as xgb
-from MyADML import AdversarialML
+from utilsMsc.MyADML import AdversarialML
 from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyPreprocessing import PreprocessingDatasets
 from sklearn.model_selection import StratifiedKFold
@@ -81,7 +81,7 @@ def pipeline_baseline_classification_performance(tabela_resultados:dict):
     
 
 if __name__ == "__main__":
-    diretorio = "./DatasetsADVS"
+    diretorio = "./data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
