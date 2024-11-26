@@ -1,4 +1,0 @@
-,Model,Dataset,Missing Rate,MAE_mean,MAE_std
-0,softImpute,acute-inflammations,5,0.263,0.138
-1,softImpute,acute-inflammations,20,0.287,0.209
-2,softImpute,acute-inflammations,40,0.339,0.198
