@@ -29,7 +29,7 @@ features that differ from the baseline. However, the Chi-Squared test
 shows that categorical features after imputation are not statistically different
 from the baseline.
 - Keywords: Data-centric AI, Cybersecurity attacks, Missing Data Imputation, Adversarial Machine Learning
-- Year: 2024
+- Year: 2025
 - Contact: mangussiarthur@gmail.com
 
 ## Installation
@@ -46,6 +46,7 @@ Execute the missing data imputation methods without applying any adversarial att
 ```bash
 python baseline_mar.py
 python baseline_mnar.py
+python baseline_mcar.py
 ```
 2. **Run the adversarial attack experiments**
 For each combination of attack type (poisoning or evasion) and missing data mechanism (MAR or MNAR), run the following command:

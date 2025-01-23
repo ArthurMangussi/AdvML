@@ -60,6 +60,25 @@ class PreprocessingDatasets:
         return data
     
     # ------------------------------------------------------------------------
+    @staticmethod
+    def encode_text_dummy(df:pd.DataFrame, name:str)-> pd.DataFrame:
+        """
+        Função para Get dummies de um dado
+        """
+
+        dummies = pd.get_dummies(df[name])
+
+        for x in dummies.columns:
+
+            dummy_name = f"{name}-{x}"
+
+            df[dummy_name] = dummies[x]
+
+        df.drop(name, axis=1, inplace=True)
+
+        return df
+    
+    # ------------------------------------------------------------------------
     def inicializa_normalizacao(X_treino: pd.DataFrame) -> MinMaxScaler:
         """
         Função para inicializar MinMaxScaler para normalizar o conjunto de dados com base nos dados de treino

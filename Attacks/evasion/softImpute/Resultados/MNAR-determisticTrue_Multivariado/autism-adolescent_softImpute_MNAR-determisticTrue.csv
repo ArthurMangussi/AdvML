@@ -1,7 +1,0 @@
-,Model,Dataset,Missing Rate,MAE_mean,MAE_std
-0,softImpute,acute-inflammations,5,0.363,0.19
-1,softImpute,acute-inflammations,20,0.333,0.066
-2,softImpute,acute-inflammations,40,0.356,0.03
-3,softImpute,autism-adolescent,5,0.665,0.101
-4,softImpute,autism-adolescent,20,0.532,0.051
-5,softImpute,autism-adolescent,40,0.489,0.076
