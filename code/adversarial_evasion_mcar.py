@@ -47,7 +47,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.attack_evasion(X_train=X_treino,
+                    X_adv_test = AdversarialML.FGSM(X_train=X_treino,
                                                           y_train=y_treino,
                                                           X_test=X_teste,
                                                           y_test=y_teste)
@@ -62,21 +62,19 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste_norm = PreprocessingDatasets.normaliza_dados(scaler, X_adv_test)
 
                     # Geração dos missing values em cada conjunto de forma independente
-                    impt_md_train = mMAR(X=X_treino_norm, 
+                    impt_md_train = mMCAR(X=X_treino_norm, 
                                             y=y_treino, 
+                                            missing_rate=md,
+                                            seed=123
                                             )
-                    X_treino_norm_md = impt_md_train.correlated(
-                        missing_rate=md
-                    )
-                    X_treino_norm_md = X_treino_norm_md.drop(columns='target')
-
-                    impt_md_test = mMAR(X=X_teste_norm, 
+                    X_treino_norm_md = impt_md_train.random()
+                    
+                    impt_md_test = mMCAR(X=X_teste_norm, 
                                          y=y_teste,
+                                         missing_rate=md,
+                                         seed=123
                                         )
-                    X_teste_norm_md = impt_md_test.correlated(
-                        missing_rate=md
-                    )
-                    X_teste_norm_md = X_teste_norm_md.drop(columns='target')
+                    X_teste_norm_md = impt_md_test.random()
                     
                     inicio_imputation = perf_counter()
                     # Inicializando e treinando o modelo
@@ -169,8 +167,9 @@ if __name__ == "__main__":
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
     
-    attack_str = "evasion"
-    mecanismo = "MAR-correlated"
+    ## QUANDO TROCAR O ATAQUE, PRECISA CHAMAR A FUNÇÃO CERTA NA LINHA50
+    attack_str = "FGSM" # Carlini, PGD
+    mecanismo = "MCAR"
     
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 

@@ -47,7 +47,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.attack_evasion(X_train=X_treino,
+                    X_adv_test = AdversarialML.FGSM(X_train=X_treino,
                                                           y_train=y_treino,
                                                           X_test=X_teste,
                                                           y_test=y_teste)
@@ -81,26 +81,14 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     inicio_imputation = perf_counter()
                     # Inicializando e treinando o modelo
                     model_selected = ModelsImputation()
-                    if model_impt == 'saei':
-                        # SAEI
-                        model = model_selected.choose_model(
-                            model=model_impt,
-                            x_train=X_treino_norm,
-                            x_test=X_teste_norm,
-                            x_train_md=X_treino_norm_md,
-                            x_test_md=X_teste_norm_md,
-                            input_shape=X.shape[1],
-                        )
-
-                    # KNN, MICE, PMIVAE, MEAN, SoftImpute, GAIN, missForest
-                    else:
-                        model = model_selected.choose_model(
-                            model=model_impt,
-                            x_train=X_treino_norm_md,
-                            x_test = X_teste_norm_md,
-                            x_test_complete = X_teste_norm,
-                            binary_val = binary_features                         
-                        )
+                    
+                    model = model_selected.choose_model(
+                        model=model_impt,
+                        x_train=X_treino_norm_md,
+                        x_test = X_teste_norm_md,
+                        x_test_complete = X_teste_norm,
+                        binary_val = binary_features                         
+                    )
 
                     fim_imputation = perf_counter()
                     file.write(
@@ -109,14 +97,10 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
 
                     # Imputação dos missing values nos conjuntos de treino e teste
                     try:
-                        if model_impt == "mean":
-                            output_md_test = model.transform(
-                                X_teste_norm_md
-                            )                        
-                        else:
-                            output_md_test = model.transform(
-                                X_teste_norm_md.iloc[:, :].values
-                            )
+                        
+                        output_md_test = model.transform(
+                            X_teste_norm_md.iloc[:, :].values
+                        )
                     except AttributeError:                        
                         fatores_latentes_test = model.fit(X_teste_norm_md.iloc[:, :].values)
                         output_md_test = model.predict(X_teste_norm_md.iloc[:, :].values)
@@ -169,7 +153,8 @@ if __name__ == "__main__":
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
     
-    attack_str = "evasion"
+    ## QUANDO TROCAR O ATAQUE, PRECISA CHAMAR A FUNÇÃO CERTA NA LINHA50
+    attack_str = "FGSM" # Carlini, PGD 
     mecanismo = "MAR-correlated"
     
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:

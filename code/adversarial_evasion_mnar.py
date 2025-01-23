@@ -47,7 +47,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.attack_evasion(X_train=X_treino,
+                    X_adv_test = AdversarialML.FGSM(X_train=X_treino,
                                                           y_train=y_treino,
                                                           X_test=X_teste,
                                                           y_test=y_teste)
@@ -169,7 +169,8 @@ if __name__ == "__main__":
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
     
-    attack_str = "evasion"
+    ## QUANDO TROCAR O ATAQUE, PRECISA CHAMAR A FUNÇÃO CERTA NA LINHA50
+    attack_str = "FGSM" # Carlini, PGD
     mecanismo = "MNAR-determisticTrue"
     
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:

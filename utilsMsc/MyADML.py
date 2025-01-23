@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, f1_score
 
 from art.estimators.classification import SklearnClassifier
-from art.attacks.evasion import FastGradientMethod
+from art.attacks.evasion import CarliniL2Method, FastGradientMethod, ProjectedGradientDescent
 from art.attacks.poisoning import PoisoningAttackSVM
 
 class AdversarialML:
@@ -22,11 +22,9 @@ class AdversarialML:
         tabela_resultados = {}
 
         tabela_resultados["datasets"] = [self.datasets["nsl_proceed"],
-                                         self.datasets["cicids_proceed"],
                                          self.datasets["preprocessed_DNN"]]
             
         tabela_resultados["nome_datasets"] = ["nsl_kdd",
-                                              "cicids2017",
                                               "edge"]
             
         tabela_resultados["missing_rate"] = [5,20,40]
@@ -86,6 +84,26 @@ class AdversarialML:
         
         return X_format, y_format
     
+    def return_art_classifier(X_train:pd.DataFrame,
+                        y_train:np.ndarray, 
+                        X_test:pd.DataFrame,
+                        ):
+        
+        X_test_float = X_test.astype("float64")
+        x_selected_adv = X_test_float.values
+        min_value = min(X_test_float.min())
+        max_value = max(X_test_float.max())
+
+        # Create and fit the Scikit-learn model
+        model = SVC(C=1.0, kernel="rbf", probability=True)
+        model.fit(X=X_train, y=y_train)
+
+        # Create ART classifier for scikit-learn SVC
+        art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
+
+        return art_classifier, x_selected_adv
+
+    
     # ------------------------------------------------------------------------
     @staticmethod
     def FGSM(X_train:pd.DataFrame,
@@ -101,22 +119,12 @@ class AdversarialML:
         Returns:
 
         """
-        X_test_float = X_test.astype("float64")
-        x_selected_adv = X_test_float.values
-        min_value = min(X_test_float.min())
-        max_value = max(X_test_float.max())
-
-        # Create and fit the Scikit-learn model
-        model = SVC(C=1.0, kernel="rbf", probability=True)
-        model.fit(X=X_train, y=y_train)
-
-        # Create ART classifier for scikit-learn SVC
-        art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
 
         attack = FastGradientMethod(estimator=art_classifier, 
                                     eps=0.3,
                                     norm=np.inf)
-        x_adv = attack.generate(x=x_selected_adv)
+        x_adv = attack.generate(x=x_adv_f)
 
         return pd.DataFrame(x_adv, columns=X_test.columns)
 
@@ -138,16 +146,7 @@ class AdversarialML:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
         
-        X_train_float = X_train.astype("float64")
-        min_value = min(X_train_float.min())
-        max_value = max(X_train_float.max())
-        
-        # Create and fit the Scikit-learn model
-        model = SVC(C=1.0, kernel="rbf", probability=True)
-        model.fit(X=X_train, y=y_train)
-
-        # Create ART classifier for scikit-learn SVC
-        art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
+        art_classifier, _ = AdversarialML.return_art_classifier(X_train, y_train, X_test)
         
         X_train_format, y_train_format = AdversarialML.get_data(X_train, y_train)
         X_test_format, y_test_format = AdversarialML.get_data(X_test, y_test)
@@ -170,9 +169,40 @@ class AdversarialML:
                                     y_train= y_train_format, 
                                     x_val= X_test_format, 
                                     y_val= y_test_format, 
-                                    max_iter=25)
+                                    max_iter=10)
         x_adv, y_adv = attack.poison(np.array([init_attack]), y=np.array([y_attack]))
         x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)])
 
         return x_result, y_adv[0][1]
 
+    # ------------------------------------------------------------------------
+    @staticmethod
+    def PGD(X_train:pd.DataFrame,
+                      y_train:np.ndarray,
+                      X_test:pd.DataFrame,
+                      y_test:np.ndarray):
+
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        attack = ProjectedGradientDescent(estimator=art_classifier,
+                                          norm=2,
+                                          max_iter=10)
+        
+        x_adv = attack.generate(x=x_adv_f)
+
+        return x_adv
+    
+    # ------------------------------------------------------------------------
+    @staticmethod
+    def Carlini(X_train:pd.DataFrame,
+                      y_train:np.ndarray,
+                      X_test:pd.DataFrame,
+                      y_test:np.ndarray):
+
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        attack = CarliniL2Method(classifier=art_classifier,
+                                 batch_size=32,
+                                 max_iter=10)
+        
+        x_adv = attack.generate(x_adv_f, y_test)
+
+        return x_adv
