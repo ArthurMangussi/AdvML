@@ -8,7 +8,6 @@ from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
 from utilsMsc.MyADML import AdversarialML
-import multiprocessing
 
 from mdatagen.multivariate.mMAR import mMAR
 
@@ -26,6 +25,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
     with open(f'./Baseline/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
+            df = PreprocessingDatasets.label_encoder(df, ["target"])
             X = df.drop(columns='target')
             y = df['target'].values
             binary_features = MyPipeline.get_binary_features(data=df)
@@ -61,7 +61,6 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                     X_treino_norm_md = impt_md_train.correlated(
                         missing_rate=md
                     )
-                    X_treino_norm_md = X_treino_norm_md.drop(columns='target')
 
                     impt_md_test = mMAR(X=X_teste_norm, 
                                          y=y_teste,
@@ -69,7 +68,6 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                     X_teste_norm_md = impt_md_test.correlated(
                         missing_rate=md
                     )
-                    X_teste_norm_md = X_teste_norm_md.drop(columns='target')
                     
                     inicio_imputation = perf_counter()
                     # Inicializando e treinando o modelo
@@ -140,21 +138,16 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
 
 if __name__ == "__main__":
 
-    diretorio = "./data"
+    diretorio = "./cybersecurity-data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
 
     mecanismo = "MAR-correlated"
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+    pipeline_adversarial("knn",mecanismo,tabela_resultados)
+    pipeline_adversarial("softImpute",mecanismo,tabela_resultados)
+    pipeline_adversarial("gain",mecanismo,tabela_resultados)
+    pipeline_adversarial("mice",mecanismo,tabela_resultados)
 
-        args_list = [
-                     ("knn",mecanismo,tabela_resultados),
-                     ("mice",mecanismo,tabela_resultados),
-                     ("softImpute",mecanismo,tabela_resultados),
-                     ("gain",mecanismo,tabela_resultados),
-                     ]
-        
-        pool.starmap(pipeline_adversarial,args_list)
 

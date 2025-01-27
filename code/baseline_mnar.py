@@ -8,7 +8,6 @@ from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
 from utilsMsc.MyADML import AdversarialML
-import multiprocessing
 
 from mdatagen.multivariate.mMNAR import mMNAR
 
@@ -57,7 +56,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
                     # Geração dos missing values em cada conjunto de forma independente
                     impt_md_train = mMNAR(X=X_treino_norm, 
                                             y=y_treino, 
-                                            )
+                                            n_xmiss=X_treino_norm.shape[1])
                     X_treino_norm_md = impt_md_train.random(
                         missing_rate=md, deterministic=True
                     )
@@ -144,21 +143,15 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict):
 
 if __name__ == "__main__":
 
-    diretorio = "./data"
+    diretorio = "./cybersecurity-data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
 
     mecanismo = "MNAR-determisticTrue"
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-
-        args_list = [
-                     ("knn",mecanismo,tabela_resultados),
-                     ("mice",mecanismo,tabela_resultados),
-                     ("softImpute",mecanismo,tabela_resultados),
-                     ("gain",mecanismo,tabela_resultados),
-                     ]
-        
-        pool.starmap(pipeline_adversarial,args_list)
+    pipeline_adversarial("knn",mecanismo,tabela_resultados)
+    pipeline_adversarial("softImpute",mecanismo,tabela_resultados)
+    pipeline_adversarial("gain",mecanismo,tabela_resultados)
+    pipeline_adversarial("mice",mecanismo,tabela_resultados)
 
