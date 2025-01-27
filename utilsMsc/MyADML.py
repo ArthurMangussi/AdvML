@@ -1,3 +1,5 @@
+from numpy.random.mtrand import uniform
+from sklearn.model_selection import RandomizedSearchCV
 from utilsMsc.MyPreprocessing import PreprocessingDatasets
 from utilsMsc.MeLogSingle import MeLogger
 
@@ -5,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score
+import joblib
 
 from art.estimators.classification import SklearnClassifier
 from art.attacks.evasion import CarliniL2Method, FastGradientMethod, ProjectedGradientDescent
@@ -21,11 +23,10 @@ class AdversarialML:
     def cria_tabela(self):
         tabela_resultados = {}
 
-        tabela_resultados["datasets"] = [self.datasets["nsl_proceed"],
-                                         self.datasets["preprocessed_DNN"]]
+        tabela_resultados["datasets"] = [self.datasets["nsl_kdd_proceed"]
+                                         ]
             
-        tabela_resultados["nome_datasets"] = ["nsl_kdd",
-                                              "edge"]
+        tabela_resultados["nome_datasets"] = ["nsl_kdd"]
             
         tabela_resultados["missing_rate"] = [5,20,40]
 
@@ -84,19 +85,101 @@ class AdversarialML:
         
         return X_format, y_format
     
-    def return_art_classifier(X_train:pd.DataFrame,
-                        y_train:np.ndarray, 
-                        X_test:pd.DataFrame,
-                        ):
+    def train_and_save(X_train:pd.DataFrame,
+                        y_train:np.ndarray,
+                        folder:int) -> SVC:
+        """
+        Train an SVM model using the given training data and save it to a specified folder.
+
+        Parameters
+        ----------
+        X_train : pd.DataFrame
+            The training feature set.
+        y_train : np.ndarray
+            The training target labels.
+        folder : int
+            Identifier for the folder where the model will be saved.
+
+        Returns
+        -------
+        SVC
+            The trained SVM model.
+        """
+                
+        svm = SVC(probability=True, random_state=42)
+
+        # 3. Definir o espaço de busca de hiperparâmetros
+        param_distributions = {
+            "C": uniform(0.1, 10),         # C: Regularização
+            "kernel": ["linear", "rbf"],   # Kernel: linear ou radial
+            "gamma": uniform(0.01, 1),     # Gamma (apenas para kernels não lineares)
+        }
+
+        # 4. Configurar o RandomizedSearchCV
+        random_search = RandomizedSearchCV(
+            estimator=svm,
+            param_distributions=param_distributions,
+            n_iter=50,                # Número de combinações aleatórias testadas
+            scoring="f1_weighted",       # Métrica de avaliação
+            cv=5,                     # Cross-validation (5 folds)
+            verbose=2,                # Verbosidade para acompanhar o progresso
+            random_state=42,          # Reprodutibilidade
+            n_jobs=-1                 # Paralelização para acelerar o treinamento
+        )
+
+        random_search.fit(X_train, y_train)
+
+        best_model = random_search.best_estimator_
+        # Save the model
+        joblib.dump(best_model,f"./models/svm_folder{folder}.pkl")
+
+        return best_model
+    
+    def get_model(folder:int)-> SVC:
+        """
+        Load a saved SVM model from the specified folder.
+
+        Parameters
+        ----------
+        folder : int
+            Identifier for the folder where the model is stored.
+
+        Returns
+        -------
+        SVC
+            The loaded SVM model.
+        """
+        path = f"./models/svm_folder{folder}.pkl"
+        model = joblib.load(path)
+        return model
+    
+    def return_art_classifier(X_test:pd.DataFrame,
+                              folder:int):
+        
+        """
+        Create and return an ART classifier based on a trained SVM model and test data.
+
+        Parameters
+        ----------
+        X_test : pd.DataFrame
+            The test feature set, which will be converted to float64 type.
+        folder : int
+            Identifier for the folder where the SVM model is stored.
+
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - SklearnClassifier: An ART classifier wrapping the SVM model.
+            - np.ndarray: The test data converted to a NumPy array.
+        """
         
         X_test_float = X_test.astype("float64")
         x_selected_adv = X_test_float.values
         min_value = min(X_test_float.min())
         max_value = max(X_test_float.max())
 
-        # Create and fit the Scikit-learn model
-        model = SVC(C=1.0, kernel="rbf", probability=True)
-        model.fit(X=X_train, y=y_train)
+        model = AdversarialML.get_model(folder)
 
         # Create ART classifier for scikit-learn SVC
         art_classifier = SklearnClassifier(model=model, clip_values=(min_value, max_value))
@@ -106,10 +189,8 @@ class AdversarialML:
     
     # ------------------------------------------------------------------------
     @staticmethod
-    def FGSM(X_train:pd.DataFrame,
-                        y_train:np.ndarray, 
-                        X_test:pd.DataFrame,
-                        y_test:np.ndarray):
+    def FGSM(X_test:pd.DataFrame,
+             folder:int):
         
         """
         Generate adversarial attack using Fast Sign Grandient Method (FGSM)
@@ -119,11 +200,13 @@ class AdversarialML:
         Returns:
 
         """
-        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_test, folder)
 
         attack = FastGradientMethod(estimator=art_classifier, 
                                     eps=0.3,
-                                    norm=np.inf)
+                                    norm=np.inf,
+                                    batch_size=128
+                                    )
         x_adv = attack.generate(x=x_adv_f)
 
         return pd.DataFrame(x_adv, columns=X_test.columns)
@@ -133,7 +216,8 @@ class AdversarialML:
     def attack_poison(X_train:pd.DataFrame,
                       y_train:np.ndarray,
                       X_test:pd.DataFrame,
-                      y_test:np.ndarray):
+                      y_test:np.ndarray,
+                      folder:int):
         """
         Generate adversarial examples on a given dataset.
 
@@ -146,7 +230,7 @@ class AdversarialML:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
         
-        art_classifier, _ = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        art_classifier, _ = AdversarialML.return_art_classifier(X_test,folder)
         
         X_train_format, y_train_format = AdversarialML.get_data(X_train, y_train)
         X_test_format, y_test_format = AdversarialML.get_data(X_test, y_test)
@@ -177,12 +261,10 @@ class AdversarialML:
 
     # ------------------------------------------------------------------------
     @staticmethod
-    def PGD(X_train:pd.DataFrame,
-                      y_train:np.ndarray,
-                      X_test:pd.DataFrame,
-                      y_test:np.ndarray):
+    def PGD(X_test:pd.DataFrame,
+            folder:int):
 
-        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_test,folder)
         attack = ProjectedGradientDescent(estimator=art_classifier,
                                           norm=2,
                                           max_iter=10)
@@ -193,12 +275,11 @@ class AdversarialML:
     
     # ------------------------------------------------------------------------
     @staticmethod
-    def Carlini(X_train:pd.DataFrame,
-                      y_train:np.ndarray,
-                      X_test:pd.DataFrame,
-                      y_test:np.ndarray):
+    def Carlini(X_test:pd.DataFrame,
+                y_test:np.ndarray,
+                folder:int):
 
-        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_train, y_train, X_test)
+        art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_test,folder)
         attack = CarliniL2Method(classifier=art_classifier,
                                  batch_size=32,
                                  max_iter=10)
