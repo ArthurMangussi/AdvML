@@ -29,9 +29,9 @@ tf.disable_v2_behavior()
 import numpy as np
 from tqdm import tqdm
 
-from Algoritmos.utils_gain import normalization, renormalization, rounding
-from Algoritmos.utils_gain import xavier_init
-from Algoritmos.utils_gain import binary_sampler, uniform_sampler, sample_batch_index
+from Algorithms.utils_gain import normalization, renormalization, rounding
+from Algorithms.utils_gain import xavier_init
+from Algorithms.utils_gain import binary_sampler, uniform_sampler, sample_batch_index
 
 
 class Gain:
