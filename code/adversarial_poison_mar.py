@@ -171,15 +171,7 @@ if __name__ == "__main__":
     
     attack_str = "poison"
     mecanismo = "MAR-correlated"
+    pipeline_adversarial("softImpute",mecanismo,tabela_resultados,attack_str)
 
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
-        args_list = [
-                     ("knn",mecanismo,tabela_resultados,attack_str),
-                     ("mice",mecanismo,tabela_resultados,attack_str),
-                     ("softImpute",mecanismo,tabela_resultados,attack_str),
-                     ("gain",mecanismo,tabela_resultados,attack_str)
-                     ]
-        
-        pool.starmap(pipeline_adversarial,args_list)
 

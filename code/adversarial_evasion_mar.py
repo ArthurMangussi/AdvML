@@ -8,7 +8,6 @@ from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
 from utilsMsc.MyADML import AdversarialML
-import multiprocessing
 
 from mdatagen.multivariate.mMAR import mMAR
 
@@ -27,6 +26,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
     with open(f'./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
+            df = PreprocessingDatasets.label_encoder(df, ["target"])
             X = df.drop(columns='target')
             y = df['target'].values
             binary_features = MyPipeline.get_binary_features(data=df)
@@ -47,10 +47,8 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.FGSM(X_train=X_treino,
-                                                          y_train=y_treino,
-                                                          X_test=X_teste,
-                                                          y_test=y_teste)
+                    X_adv_test = AdversarialML.FGSM(X_test=X_teste,
+                                                    folder=fold)
 
                     # Inicializando o normalizador (scaler)
                     scaler = PreprocessingDatasets.inicializa_normalizacao(X_treino)
@@ -147,7 +145,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
 
 if __name__ == "__main__":
 
-    diretorio = "./data"
+    diretorio = "./cybersecurity-data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
@@ -157,14 +155,8 @@ if __name__ == "__main__":
     attack_str = "FGSM" # Carlini, PGD 
     mecanismo = "MAR-correlated"
     
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-
-        args_list = [
-                     ("knn",mecanismo,tabela_resultados,attack_str),
-                     ("mice",mecanismo,tabela_resultados,attack_str),
-                     ("softImpute",mecanismo,tabela_resultados,attack_str),
-                     ("gain",mecanismo,tabela_resultados,attack_str)
-                     ]
-        
-        pool.starmap(pipeline_adversarial,args_list)
-
+    pipeline_adversarial("softImpute",mecanismo,tabela_resultados,attack_str),
+    pipeline_adversarial("gain",mecanismo,tabela_resultados,attack_str)
+    pipeline_adversarial("knn",mecanismo,tabela_resultados,attack_str),
+    pipeline_adversarial("mice",mecanismo,tabela_resultados,attack_str),
+    

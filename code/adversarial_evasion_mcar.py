@@ -47,10 +47,8 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.PGD(X_train=X_treino,
-                                                          y_train=y_treino,
-                                                          X_test=X_teste,
-                                                          y_test=y_teste)
+                    X_adv_test = AdversarialML.FGSM(X_test=X_teste,
+                                                   folder=fold)
 
                     # Inicializando o normalizador (scaler)
                     scaler = PreprocessingDatasets.inicializa_normalizacao(X_treino)
@@ -151,7 +149,7 @@ if __name__ == "__main__":
     tabela_resultados = adv_ml.cria_tabela()
     
     ## QUANDO TROCAR O ATAQUE, PRECISA CHAMAR A FUNÇÃO CERTA NA LINHA50
-    attack_str = "PGD" # Carlini, PGD
+    attack_str = "FGSM" # Carlini, PGD
     mecanismo = "MCAR"
     pipeline_adversarial("knn",mecanismo,tabela_resultados,attack_str)
     # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:

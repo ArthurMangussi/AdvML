@@ -110,18 +110,17 @@ class AdversarialML:
 
         # 3. Definir o espaço de busca de hiperparâmetros
         param_distributions = {
-            "C": uniform(0.1, 10),         # C: Regularização
+            "C": np.arange(0.1, 10),         # C: Regularização
             "kernel": ["linear", "rbf"],   # Kernel: linear ou radial
-            "gamma": uniform(0.01, 1),     # Gamma (apenas para kernels não lineares)
+            "gamma": np.arange(0.01, 1),     # Gamma (apenas para kernels não lineares)
         }
 
         # 4. Configurar o RandomizedSearchCV
         random_search = RandomizedSearchCV(
             estimator=svm,
             param_distributions=param_distributions,
-            n_iter=50,                # Número de combinações aleatórias testadas
+            n_iter=5,                # Número de combinações aleatórias testadas
             scoring="f1_weighted",       # Métrica de avaliação
-            cv=5,                     # Cross-validation (5 folds)
             verbose=2,                # Verbosidade para acompanhar o progresso
             random_state=42,          # Reprodutibilidade
             n_jobs=-1                 # Paralelização para acelerar o treinamento
