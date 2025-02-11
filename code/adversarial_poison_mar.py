@@ -27,6 +27,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
     with open(f'./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
+            df = PreprocessingDatasets.label_encoder(df, ["target"])
             X = df.drop(columns='target')
             y = df['target'].values
             binary_features = MyPipeline.get_binary_features(data=df)
@@ -46,23 +47,24 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_treino = pd.DataFrame(x_treino, columns=X.columns)
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
-                    # Geração do ataque no dataset de teste
-                    X_adv_train,y_adv = AdversarialML.attack_poison(X_train=X_treino,
-                                                          y_train=y_treino,
-                                                          X_test=X_teste,
-                                                          y_test=y_teste)
-
                     # Inicializando o normalizador (scaler)
-                    scaler = PreprocessingDatasets.inicializa_normalizacao(X_adv_train)
+                    scaler = PreprocessingDatasets.inicializa_normalizacao(X_treino)
 
                     # Normalizando os dados
                     X_treino_norm = PreprocessingDatasets.normaliza_dados(
-                        scaler, X_adv_train
+                        scaler, X_treino
                     )
                     X_teste_norm = PreprocessingDatasets.normaliza_dados(scaler, X_teste)
 
+                    # Geração do ataque no dataset de teste
+                    X_adv_train, y_adv = AdversarialML.attack_poison(X_train=X_treino_norm,
+                                                          y_train=y_treino,
+                                                          X_test=X_teste_norm,
+                                                          y_test=y_teste,
+                                                          folder=fold)
+                    
                     # Geração dos missing values em cada conjunto de forma independente
-                    impt_md_train = mMAR(X=X_treino_norm, 
+                    impt_md_train = mMAR(X=X_adv_train, 
                                             y=np.append(y_treino, y_adv), 
                                             )
                     X_treino_norm_md = impt_md_train.correlated(

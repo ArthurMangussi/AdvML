@@ -33,7 +33,7 @@ class AdversarialML:
         return tabela_resultados
     
     # ------------------------------------------------------------------------
-    def find_duplicates(x_train):
+    def find_duplicates(x_train, y_train, columns):
         """
         Returns an array of booleans that is true if that element was previously in the array
 
@@ -42,35 +42,32 @@ class AdversarialML:
         :return: duplicates array
         :rtype: `np.ndarray`
         """
-        dup = np.zeros(x_train.shape[0])
-        for idx, x in enumerate(x_train):
-            dup[idx] = np.isin(x_train[:idx], x).all(axis=1).any()
-        return dup
+        x_train = pd.DataFrame(x_train, columns = columns)
+        x_train["target"] = y_train
+        
+        x_train.drop_duplicates(inplace=True)
+        
+        return x_train
     
     # ------------------------------------------------------------------------
     def get_data(X_raw:pd.DataFrame,
-                 y_raw:np.ndarray,
+                 y_raw:np.ndarray
                  ):  
         
-        X_raw = X_raw.astype("float64").values
-        y = np.copy(y_raw)
+        X_raw_columns = X_raw.columns
+        dups = AdversarialML.find_duplicates(X_raw, y_raw, X_raw_columns)
+        
+        X_ = dups.drop(columns="target")
+        y_ = dups["target"].values
+        
+        X_raw = X_.astype("float64").values
+        y = np.copy(y_)
+        num_classes = 40
                 
-        if len(np.unique(y)) == 2:
-            labels = np.zeros((y.shape[0], 2))  
-            labels[y == 0] = np.array([1, 0])
-            labels[y == 1] = np.array([0, 1])
-        elif len(np.unique(y)) == 3:
-            labels = np.zeros((y.shape[0], 3)) 
-            labels[y == 0] = np.array([1, 0, 0])
-            labels[y == 1] = np.array([0, 1, 0])
-            labels[y == 2] = np.array([0, 0, 1])
-        elif len(np.unique(y)) == 4:
-            labels = np.zeros((y.shape[0], 4)) 
-            labels[y == 0] = np.array([1, 0, 0, 0])
-            labels[y == 1] = np.array([0, 1, 0, 0])
-            labels[y == 2] = np.array([0, 0, 1, 0])
-            labels[y == 3] = np.array([0, 0, 0, 1])
-                        
+        labels = np.zeros((y.shape[0], num_classes))
+        
+        labels[np.arange(y.shape[0]), y] = 1
+        
         y = labels
         n_sample = len(X_raw)
     
@@ -78,12 +75,8 @@ class AdversarialML:
         
         X = X_raw[order]
         y = y[order]
-
-        dups = AdversarialML.find_duplicates(X_raw)
-        X_format = X[dups == False]
-        y_format = y[dups == False]
         
-        return X_format, y_format
+        return X, y
     
     def train_and_save(X_train:pd.DataFrame,
                         y_train:np.ndarray,
@@ -228,35 +221,46 @@ class AdversarialML:
         Returns:
             pd.DataFrame: A DataFrame containing the dataset with adversarial examples added.
         """
-        
+
         art_classifier, _ = AdversarialML.return_art_classifier(X_test,folder)
         
         X_train_format, y_train_format = AdversarialML.get_data(X_train, y_train)
         X_test_format, y_test_format = AdversarialML.get_data(X_test, y_test)
-        attack_idx = np.random.choice(len(X_train_format))
-
-        init_attack = np.copy(X_train_format[attack_idx])
-        if y_train_format.shape[1] == 2:
-            y_attack = np.array([1, 1]) - np.copy(y_train_format[attack_idx])
-        elif y_train_format.shape[1] == 3:
-            y_attack = np.array([1, 1, 1]) - np.copy(y_train_format[attack_idx])
-        elif y_train_format.shape[1] == 4:
-            y_attack = np.array([1, 1, 1, 1]) - np.copy(y_train_format[attack_idx])
-        else:
-            raise ValueError("Deu erro no shape do y_train_format")
+        
+        ## Gerar um subset 
+        num_amostras = 1000
+        subset = np.random.choice(X_train_format.shape[0], num_amostras, replace=False)
+        subset_test = np.random.choice(X_test_format.shape[0], num_amostras, replace=False)
+        
+        X_train_format_subset = X_train_format[subset, :]
+        y_train_subset = y_train_format[subset, :]
+        X_test_format_subset = X_test_format[subset_test, :]
+        y_test_subset = y_test_format[subset_test, :]
+        
+        attack_idx = np.random.choice(len(X_train_format_subset))
+        
+        init_attack = np.copy(X_train_format_subset[attack_idx])
+        
+        y_attack = np.ones(y_train_subset.shape[1]) - np.copy(y_train_subset[attack_idx])
 
         attack = PoisoningAttackSVM(classifier=art_classifier, 
-                                    step=0.001, 
+                                    step=0.1, 
                                     eps = 1.0, 
-                                    x_train= X_train_format, 
-                                    y_train= y_train_format, 
-                                    x_val= X_test_format, 
-                                    y_val= y_test_format, 
+                                    x_train= X_train_format_subset, 
+                                    y_train= y_train_subset, 
+                                    x_val = X_test_format_subset,
+                                    y_val =  y_test_subset,
                                     max_iter=10)
-        x_adv, y_adv = attack.poison(np.array([init_attack]), y=np.array([y_attack]))
-        x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)])
-
-        return x_result, y_adv[0][1]
+                                    
+        x_adv, y_adv  = attack.poison(np.array([init_attack]), np.array([y_attack]))
+        x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)]).reset_index(inplace=True)
+        
+        if np.sum(y_adv[0]) > 1:
+            y_adv_result = np.argmin(y_adv[0])
+        elif np.sum(y_adv[0]) == 1:
+            y_adv_result = np.argmax(y_adv[0])
+        
+        return pd.DataFrame(x_result, columns=X_train.columns), y_adv_result
 
     # ------------------------------------------------------------------------
     @staticmethod
@@ -266,11 +270,13 @@ class AdversarialML:
         art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_test,folder)
         attack = ProjectedGradientDescent(estimator=art_classifier,
                                           norm=2,
-                                          max_iter=10)
+                                          max_iter=5,
+                                          eps=0.15,
+                                          batch_size=128)
         
         x_adv = attack.generate(x=x_adv_f)
 
-        return x_adv
+        return pd.DataFrame(x_adv, columns=X_test.columns)
     
     # ------------------------------------------------------------------------
     @staticmethod
