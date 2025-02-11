@@ -228,7 +228,7 @@ class AdversarialML:
         X_test_format, y_test_format = AdversarialML.get_data(X_test, y_test)
         
         ## Gerar um subset 
-        num_amostras = 1000
+        num_amostras = 5000
         subset = np.random.choice(X_train_format.shape[0], num_amostras, replace=False)
         subset_test = np.random.choice(X_test_format.shape[0], num_amostras, replace=False)
         
@@ -253,7 +253,7 @@ class AdversarialML:
                                     max_iter=10)
                                     
         x_adv, y_adv  = attack.poison(np.array([init_attack]), np.array([y_attack]))
-        x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)]).reset_index(inplace=True)
+        x_result = pd.concat([X_train, pd.DataFrame(x_adv, columns=X_train.columns)]).reset_index(drop=True)
         
         if np.sum(y_adv[0]) > 1:
             y_adv_result = np.argmin(y_adv[0])
@@ -285,10 +285,17 @@ class AdversarialML:
                 folder:int):
 
         art_classifier, x_adv_f = AdversarialML.return_art_classifier(X_test,folder)
+        
+        num_amostras = int(0.1*x_adv_f.shape[0])
+        subset_test = np.random.choice(x_adv_f.shape[0], num_amostras, replace=False)
+        
+        X_test_format_subset = x_adv_f[subset_test, :]
+        y_test_subset = y_test[subset_test]
+
         attack = CarliniL2Method(classifier=art_classifier,
                                  batch_size=32,
                                  max_iter=10)
         
-        x_adv = attack.generate(x_adv_f, y_test)
+        x_adv = attack.generate(X_test_format_subset, y_test_subset)
 
-        return x_adv
+        return pd.DataFrame(x_adv, columns=X_test.columns)
