@@ -14,9 +14,7 @@ nohup.out
 /Attacks
 
 /cybersecurity-data
-
-baseline_classifier.py
-adversarial_classifier.py
+/data
 
 # Distribution / packaging
 .Python

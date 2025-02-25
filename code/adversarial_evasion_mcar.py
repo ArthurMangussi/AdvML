@@ -1,3 +1,4 @@
+import multiprocessing
 import pandas as pd 
 
 from sklearn.model_selection import StratifiedKFold
@@ -8,7 +9,6 @@ from utilsMsc.MeLogSingle import MeLogger
 from utilsMsc.MyResults import AnalysisResults
 
 from utilsMsc.MyADML import AdversarialML
-import multiprocessing
 
 from mdatagen.multivariate.mMCAR import mMCAR
 
@@ -16,15 +16,15 @@ from time import perf_counter
 import os 
 
 def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,set_attack:str):
-    "Main pipeline to perform adversarial evasion attack under MAR multivariate mechanism."
+    "Main pipeline to perform adversarial evasion attack under MCAR multivariate mechanism."
     _logger = MeLogger()
 
     # Cria diretórios para salvar os resultados do experimento
-    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
-    os.makedirs(f"./Attacks/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado", exist_ok=True)
+    os.makedirs(f"./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado", exist_ok=True)
     
-    with open(f'./Attacks/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
+    with open(f'./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Tempos/{mecanismo}_Multivariado/tempo_{model_impt}.txt','w') as file:
         for dados, nome in zip(tabela_resultados['datasets'], tabela_resultados['nome_datasets']):
             df = dados.copy()
             X = df.drop(columns='target')
@@ -47,8 +47,9 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     X_teste = pd.DataFrame(x_teste, columns=X.columns)
 
                     # Geração do ataque no dataset de teste
-                    X_adv_test = AdversarialML.FGSM(X_test=X_teste,
-                                                   folder=fold)
+                    X_adv_test = AdversarialML.PGD(X_train=X_treino,
+                                                    X_test=X_teste,
+                                                    y_train=y_treino)
 
                     # Inicializando o normalizador (scaler)
                     scaler = PreprocessingDatasets.inicializa_normalizacao(X_treino)
@@ -123,7 +124,7 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                     data_imputed = pd.DataFrame(output_md_test.copy(), columns=X.columns)
                     data_imputed['target'] = y_teste
 
-                    data_imputed.to_csv(f"./Attacks/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
+                    data_imputed.to_csv(f"./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Datasets/{mecanismo}_Multivariado/{nome}_{model_impt}_fold{fold}_md{md}.csv", index=False)
                     fold += 1
                     
             resultados_final = AnalysisResults.extrai_resultados(tabela_resultados)
@@ -135,31 +136,32 @@ def pipeline_adversarial(model_impt:str, mecanismo:str, tabela_resultados:dict,s
                 )
             )
             resultados_mecanismo.to_csv(
-                f'./Attacks/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado/{nome}_{model_impt}_{mecanismo}.csv',
+                f'./Attacks/Resultados_UCI/{set_attack}/{model_impt}/Resultados/{mecanismo}_Multivariado/{nome}_{model_impt}_{mecanismo}.csv',
                 
             )        
     return _logger.info(f"Imputation_{model_impt}_done!")
 
 if __name__ == "__main__":
 
-    diretorio = "./cybersecurity-data"
+    diretorio = "./data"
     datasets = MyPipeline.carrega_datasets(diretorio)
 
     adv_ml = AdversarialML(datasets)
     tabela_resultados = adv_ml.cria_tabela()
     
     ## QUANDO TROCAR O ATAQUE, PRECISA CHAMAR A FUNÇÃO CERTA NA LINHA50
-    attack_str = "FGSM" # Carlini, PGD
+    attack_str = "PGD" 
     mecanismo = "MCAR"
-    pipeline_adversarial("knn",mecanismo,tabela_resultados,attack_str)
-    # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+    
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
 
-    #     args_list = [
-    #                  ("knn",mecanismo,tabela_resultados,attack_str),
-    #                  ("mice",mecanismo,tabela_resultados,attack_str),
-    #                  ("softImpute",mecanismo,tabela_resultados,attack_str),
-    #                  ("gain",mecanismo,tabela_resultados,attack_str)
-    #                  ]
+        args_list = [
+                     ("knn",mecanismo,tabela_resultados,attack_str),
+                     ("mice",mecanismo,tabela_resultados,attack_str),
+                     ("softImpute",mecanismo,tabela_resultados,attack_str),
+                     ("gain",mecanismo,tabela_resultados,attack_str),
+                     ]
         
-    #     pool.starmap(pipeline_adversarial,args_list)
+        pool.starmap(pipeline_adversarial,args_list)
+
 
