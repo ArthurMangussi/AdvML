@@ -377,7 +377,7 @@ class AdversarialML:
                                          self.liver,
                                          self.mathernal_risk,
                                          self.npha,
-                                         self.parkinsons,
+                                        #  self.parkinsons,
                                          self.phoneme,
                                          self.pima,
                                          self.prob_football,
@@ -385,8 +385,8 @@ class AdversarialML:
                                          self.sa_heart,
                                          self.thoracic_surgery,
                                          self.thyroid,
-                                         self.wine,
-                                         self.wiscosin                                         
+                                        #  self.wine,
+                                        #  self.wiscosin                                         
                                          ]
             
         tabela_resultados["nome_datasets"] = ["acute-inflammations",
@@ -408,7 +408,7 @@ class AdversarialML:
                                               "liver",                                              
                                               "mathernal-risk",
                                               "npha",
-                                              "parkinsons",
+                                            #   "parkinsons",
                                               "phoneme",
                                               "pima-diabetes",
                                               "proba_football",
@@ -416,8 +416,8 @@ class AdversarialML:
                                               "sa-heart",
                                               "thoracic-surgery",
                                               "thyroid-recurrence",
-                                              "wine",
-                                              "wiscosin"
+                                            #   "wine",
+                                            #   "wiscosin"
                                               ]
             
         tabela_resultados["missing_rate"] = [5,20,40]

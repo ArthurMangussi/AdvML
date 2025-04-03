@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*
+
+#  =============================================================================
+# Aeronautics Institute of Technologies (ITA) - Brazil
+# University of Coimbra (UC) - Portugal
+# Arthur Dantas Mangussi - mangussiarthur@gmail.com
+# =============================================================================
+
+__author__ = 'Arthur Dantas Mangussi'
+
 # Código para classificação dos datasets imputados
 import xgboost as xgb
 from utilsMsc.MeLogSingle import MeLogger

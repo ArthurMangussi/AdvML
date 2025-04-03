@@ -2,16 +2,18 @@ import os
 import pandas as pd
 
 
-for type_attack in ["evasion", "poison"]:
+for type_attack in ["Carlini"]:
 
   for model_impt in ["gain",
                         "knn",
                         "mice",
-                        "softimpute"]:
-      for mecanismo in ["MAR-correlated_Multivariado",
-                        "MNAR-determisticTrue_Multivariado"]:
+                        "softImpute"]:
+      for mecanismo in [#"MAR-correlated-UCI_Multivariado",
+                        "MNAR-determisticTrue-UCI_Multivariado",
+                        #"MCAR_Multivariado"
+                        ]:
         
-        os.makedirs(f"./Attacks/{type_attack}/{model_impt}/DatasetsUnificados/{mecanismo}", exist_ok=True)
+        os.makedirs(f"./Attacks/Resultados_UCI/{type_attack}/{model_impt}/DatasetsUnificados/{mecanismo}", exist_ok=True)
 
         for name_dataset in ["acute-inflammations",
                   "autism-adolescent",
@@ -33,7 +35,7 @@ for type_attack in ["evasion", "poison"]:
                   "mathernal-risk",
                   "npha",
                   "parkinsons",
-                  "phoneme",
+                  #"phoneme",
                   "pima-diabetes",
                   "proba_football",
                   "ricci",
@@ -49,7 +51,7 @@ for type_attack in ["evasion", "poison"]:
               folds = []
               for fold in range (5):
                 
-                path = f"./Attacks/{type_attack}/{model_impt}/Datasets/{mecanismo}"
+                path = f"./Attacks/Resultados_UCI/{type_attack}/{model_impt}/Datasets/{mecanismo}"
                 arq = f"{name_dataset}_{model_impt}_fold{fold}_md{mr}.csv"
                     
                 df = pd.read_csv(os.path.join(path,arq))
@@ -57,6 +59,6 @@ for type_attack in ["evasion", "poison"]:
                     
               df_unificado = pd.concat(folds, ignore_index=True)
               
-              df_unificado.to_csv(f"./Attacks/{type_attack}/{model_impt}/DatasetsUnificados/{mecanismo}/{name_dataset}_{model_impt}_md{mr}.csv", index=False)        
+              df_unificado.to_csv(f"./Attacks/Resultados_UCI/{type_attack}/{model_impt}/DatasetsUnificados/{mecanismo}/{name_dataset}_{model_impt}_md{mr}.csv", index=False)        
 
 print("done")
